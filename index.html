@@ -8,17 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --primary: #2563EB;
-    --primary-light: #3B82F6;
-    --primary-dark: #1D4ED8;
+    --primary: #DC2626;
+    --primary-light: #EF4444;
+    --primary-dark: #B91C1C;
     --accent: #F59E0B;
     --accent2: #10B981;
     --red: #EF4444;
-    --bg: #F0F4FF;
-    --card: #FFFFFF;
-    --text: #1E293B;
-    --muted: #64748B;
-    --border: #E2E8F0;
+    --bg: #000000;
+    --card: #18181b;
+    --text: #ffffff;
+    --muted: #a1a1aa;
+    --border: #3f3f46;
     --shadow: 0 4px 24px rgba(37,99,235,0.10);
     --radius: 18px;
   }
@@ -47,7 +47,7 @@
   .logo { display:flex; align-items:center; gap:10px; text-decoration:none; margin-right:16px; }
   .logo-icon {
     width:40px; height:40px; border-radius:12px;
-    background: linear-gradient(135deg,#2563EB,#7C3AED);
+    background: linear-gradient(135deg,var(--primary),#7C3AED);
     display:flex; align-items:center; justify-content:center;
     font-family:'Noto Sans SC',sans-serif; font-size:18px; font-weight:700; color:#fff;
   }
@@ -92,9 +92,9 @@
     padding:14px 28px; border-radius:12px; background:var(--primary); color:#fff;
     font-size:15px; font-weight:700; border:none; cursor:pointer;
     display:flex; align-items:center; gap:8px; transition:all .25s;
-    box-shadow: 0 4px 16px rgba(37,99,235,0.30);
+    box-shadow: 0 4px 16px rgba(220,38,38,0.30);
   }
-  .btn-hero-main:hover { background:var(--primary-dark); transform:translateY(-2px); box-shadow:0 6px 24px rgba(37,99,235,0.35); }
+  .btn-hero-main:hover { background:var(--primary-dark); transform:translateY(-2px); box-shadow:0 6px 24px rgba(220,38,38,0.35); }
   .btn-hero-sec {
     padding:14px 28px; border-radius:12px; background:#fff; color:var(--text);
     font-size:15px; font-weight:700; border:1.5px solid var(--border); cursor:pointer;
@@ -170,8 +170,8 @@
     cursor:pointer; border:2px solid transparent; transition:all .25s;
     box-shadow:0 2px 12px rgba(0,0,0,0.05);
   }
-  .mode-card:hover { transform:translateY(-4px); box-shadow:0 8px 28px rgba(37,99,235,0.15); }
-  .mode-card.active { border-color:var(--primary); background:#EFF6FF; }
+  .mode-card:hover { transform:translateY(-4px); box-shadow:0 8px 28px rgba(220,38,38,0.15); }
+  .mode-card.active { border-color:var(--primary); background:#FEF2F2; }
   .mode-icon { font-size:36px; margin-bottom:10px; }
   .mode-card h3 { font-size:16px; font-weight:700; margin-bottom:4px; }
   .mode-card p { font-size:12.5px; color:var(--muted); }
@@ -213,7 +213,7 @@
     align-items:center; justify-content:center; padding:28px;
   }
   .fc-front {
-    background: linear-gradient(135deg,#1D4ED8 0%,#2563EB 60%,#7C3AED 100%);
+    background: linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 60%,#7C3AED 100%);
     color:#fff;
   }
   .fc-back {
@@ -290,7 +290,7 @@
     width:80px; height:80px; border-radius:50%;
     background:var(--primary); border:none; cursor:pointer;
     font-size:32px; display:flex; align-items:center; justify-content:center;
-    transition:all .25s; box-shadow:0 4px 20px rgba(37,99,235,.4);
+    transition:all .25s; box-shadow:0 4px 20px rgba(220,38,38,.4);
   }
   .mic-btn:hover { transform:scale(1.08); }
   .mic-btn.recording {
@@ -329,8 +329,8 @@
     border:2px solid transparent; cursor:pointer; transition:all .25s;
     box-shadow:0 2px 8px rgba(0,0,0,0.05);
   }
-  .hsk-level-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(37,99,235,0.12); }
-  .hsk-level-card.active { border-color:var(--primary); background:#EFF6FF; }
+  .hsk-level-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(220,38,38,0.12); }
+  .hsk-level-card.active { border-color:var(--primary); background:#FEF2F2; }
   .hsk-num { font-size:32px; font-weight:800; color:var(--primary); }
   .hsk-words { font-size:12px; color:var(--muted); margin:4px 0; }
   .hsk-progress-mini { height:4px; background:#E2E8F0; border-radius:2px; margin-top:8px; }
@@ -358,7 +358,7 @@
 
   /* Footer */
   footer {
-    background:var(--text); color:#94A3B8; padding:32px 24px; text-align:center;
+    background:var(--bg); color:#94A3B8; padding:32px 24px; text-align:center;
     font-size:13px;
   }
   footer .f-logo { font-size:20px; font-weight:800; color:#fff; margin-bottom:8px; }
@@ -384,11 +384,24 @@
     .hsk-levels { grid-template-columns:repeat(3,1fr); }
     .features-grid { grid-template-columns:repeat(2,1fr); }
   }
+  /* Dark mode overrides */
+  nav, .char-card, .mini-card, .vocab-card, .mode-card, .flashcard-zone, .fc-level-btn, .fc-back, canvas#writeCanvas, .listen-option, .hsk-level-card, .features, .feature-card, .btn-hero-sec, .btn-outline { background: var(--card); }
+  .char-card, .mini-card, .vocab-card, .flashcard-zone, .fc-level-btn, .fc-back, canvas#writeCanvas, .listen-option, .feature-card, .btn-hero-sec, .btn-outline { border-color: var(--border); }
+  .hero-badge, .section-badge { background: #7f1d1d; border-color: var(--primary); }
+  .mode-card.active, .hsk-level-card.active { background: #7f1d1d; border-color: var(--primary); }
+  .listen-option.correct { background: #064e3b; border-color: #10b981; color: #4ade80; }
+  .listen-option.wrong { background: #7f1d1d; border-color: #ef4444; color: #f87171; }
+  .btn-skip, .btn-clear { background: #334155; color: #cbd5e1; }
+  .btn-wrong { background: #7f1d1d; color: #fca5a5; }
+  .btn-correct { background: #064e3b; color: #6ee7b7; }
+  .hsk-dot.inactive { background: #334155; color: #94a3b8; }
+  .hsk-bar, .hsk-progress-mini, .fc-progress-bar { background: #334155; }
+  .toast.show { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  .fi-blue, .fi-green, .fi-amber, .fi-purple { background: #334155; }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a class="logo" href="#">
@@ -408,7 +421,6 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <section>
   <div class="hero">
     <div>
@@ -454,7 +466,6 @@
   </div>
 </section>
 
-<!-- FLASHCARD SECTION -->
 <section id="flashcard-section" class="modes-section">
   <div class="section-title">
     <div class="section-badge">🃏 Học thông minh</div>
@@ -462,7 +473,6 @@
     <p>Chọn kỹ năng bạn muốn luyện và bắt đầu ngay</p>
   </div>
 
-  <!-- MODE SELECTOR -->
   <div class="modes-grid">
     <div class="mode-card active" onclick="setMode('read',this)">
       <div class="mode-icon">👁️</div>
@@ -490,7 +500,6 @@
     </div>
   </div>
 
-  <!-- FLASHCARD ZONE -->
   <div class="flashcard-zone">
     <div class="fc-header">
       <div class="fc-title" id="fcTitle">🃏 Luyện đọc — HSK 1</div>
@@ -505,7 +514,6 @@
     </div>
     <div class="fc-progress-bar"><div class="fc-progress-fill" id="fcFill" style="width:10%"></div></div>
 
-    <!-- READ MODE -->
     <div id="readMode" class="fc-stage">
       <div class="fc-card-wrap" onclick="flipCard()">
         <div class="fc-card-inner" id="fcCardInner">
@@ -530,7 +538,6 @@
       </div>
     </div>
 
-    <!-- SPEAK MODE -->
     <div id="speakMode" class="fc-stage hidden">
       <div class="fc-speak-zone">
         <div class="speak-card">
@@ -547,7 +554,6 @@
       </div>
     </div>
 
-    <!-- WRITE MODE -->
     <div id="writeMode" class="fc-stage hidden">
       <div class="fc-write-zone">
         <div class="fc-write-prompt">
@@ -567,7 +573,6 @@
       </div>
     </div>
 
-    <!-- LISTEN MODE -->
     <div id="listenMode" class="fc-stage hidden">
       <div class="fc-listen-zone">
         <div class="listen-card">
@@ -584,7 +589,6 @@
   </div>
 </section>
 
-<!-- HSK SECTION -->
 <section id="hsk-section" class="hsk-section">
   <div class="section-title">
     <div class="section-badge">📊 Lộ trình học</div>
@@ -631,7 +635,6 @@
   </div>
 </section>
 
-<!-- FEATURES -->
 <section class="features">
   <div class="features-inner">
     <div class="section-title">
@@ -663,13 +666,11 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="f-logo">Doan Huy</div>
   <p style="margin-top:8px">Made in Việt Nam</p>
 </footer>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -867,7 +868,7 @@ function checkWrite(){
 function showWriteAnswer(){
   const c = getCards()[curIdx % getCards().length];
   ctx.font = `140px "Noto Sans SC", serif`;
-  ctx.fillStyle = 'rgba(37,99,235,0.15)';
+  ctx.fillStyle = 'rgba(220,38,38,0.15)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(c.char, canvas.width/2, canvas.height/2);
