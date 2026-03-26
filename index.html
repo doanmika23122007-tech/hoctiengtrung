@@ -6,6 +6,8 @@
 <title>Học Tiếng Trung cùng Doan_Huy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
     --primary:       #8B1A1A;
@@ -23,43 +25,108 @@
     --shadow:        0 4px 24px rgba(139,26,26,0.10);
     --radius:        18px;
   }
-
   * { margin:0; padding:0; box-sizing:border-box; }
-
   body {
     font-family: 'Be Vietnam Pro', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
+    background: var(--bg); color: var(--text); min-height: 100vh;
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238B1A1A' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
-  nav {
-    background: var(--card);
-    border-bottom: 2px solid var(--border);
-    position: sticky; top:0; z-index:100;
-    box-shadow: 0 2px 16px rgba(139,26,26,0.08);
-  }
+  /* NAV */
+  nav { background:var(--card); border-bottom:2px solid var(--border); position:sticky; top:0; z-index:200; box-shadow:0 2px 16px rgba(139,26,26,0.08); }
   .nav-inner { max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; gap:8px; height:64px; }
   .logo { display:flex; align-items:center; gap:10px; text-decoration:none; margin-right:16px; }
-  .logo-icon {
-    width:42px; height:42px; border-radius:10px;
-    background: linear-gradient(135deg,#8B1A1A,#C8860A);
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Noto Serif SC',serif; font-size:20px; font-weight:700; color:#FFE8A0;
-    box-shadow: 0 2px 10px rgba(139,26,26,0.35);
-  }
+  .logo-icon { width:42px; height:42px; border-radius:10px; background:linear-gradient(135deg,#8B1A1A,#C8860A); display:flex; align-items:center; justify-content:center; font-family:'Noto Serif SC',serif; font-size:20px; font-weight:700; color:#FFE8A0; box-shadow:0 2px 10px rgba(139,26,26,0.35); }
   .logo-text { font-weight:800; font-size:20px; color:var(--primary); }
   .logo-sub { font-size:11px; color:var(--muted); display:block; margin-top:-4px; font-weight:400; }
   .nav-links { display:flex; gap:2px; flex:1; }
   .nav-links a { padding:6px 14px; border-radius:8px; font-size:13.5px; font-weight:500; color:var(--muted); text-decoration:none; transition:all .2s; white-space:nowrap; }
   .nav-links a:hover, .nav-links a.active { background:rgba(139,26,26,0.08); color:var(--primary); font-weight:600; }
-  .nav-btns { display:flex; gap:8px; margin-left:auto; }
-  .btn-outline { padding:8px 18px; border-radius:10px; border:1.5px solid var(--border); background:transparent; color:var(--text); font-size:13.5px; font-weight:600; cursor:pointer; transition:all .2s; }
-  .btn-outline:hover { border-color:var(--primary); color:var(--primary); }
-  .btn-solid { padding:8px 20px; border-radius:10px; border:none; background:var(--primary); color:#FAF3E8; font-size:13.5px; font-weight:600; cursor:pointer; transition:all .2s; }
-  .btn-solid:hover { background:var(--primary-dark); transform:translateY(-1px); }
+  .nav-btns { display:flex; gap:8px; margin-left:auto; align-items:center; }
 
+  /* Google Login Button (small, in nav) */
+  .btn-google-login {
+    display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:10px;
+    border:1.5px solid var(--border); background:var(--card); color:var(--text);
+    font-size:13.5px; font-weight:600; cursor:pointer; transition:all .2s;
+    font-family:'Be Vietnam Pro',sans-serif; white-space:nowrap;
+  }
+  .btn-google-login:hover { border-color:#4285F4; color:#4285F4; box-shadow:0 2px 8px rgba(66,133,244,0.15); }
+
+  /* User Avatar Area */
+  .user-area { position:relative; display:flex; align-items:center; }
+  .user-avatar-btn {
+    display:flex; align-items:center; gap:8px; padding:4px 12px 4px 4px;
+    border-radius:30px; border:1.5px solid var(--border); background:var(--card);
+    cursor:pointer; transition:all .2s;
+  }
+  .user-avatar-btn:hover { border-color:var(--primary); box-shadow:0 2px 8px rgba(139,26,26,0.12); }
+  .user-avatar-img { width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid var(--border); }
+  .user-display-name { font-size:13px; font-weight:600; color:var(--text); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .chevron { color:var(--muted); flex-shrink:0; }
+
+  /* Dropdown */
+  .user-dropdown {
+    position:absolute; top:calc(100% + 10px); right:0; background:var(--card);
+    border:1.5px solid var(--border); border-radius:16px; padding:8px; min-width:250px;
+    box-shadow:0 8px 32px rgba(42,21,6,0.18); z-index:300; display:none;
+    animation:fadeDown .18s ease;
+  }
+  .user-dropdown.open { display:block; }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .drop-profile { display:flex; align-items:center; gap:12px; padding:10px 8px 14px; border-bottom:1px solid var(--border); margin-bottom:6px; }
+  .drop-avatar { width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid var(--primary); flex-shrink:0; }
+  .drop-name { font-size:14px; font-weight:700; color:var(--text); }
+  .drop-email { font-size:11.5px; color:var(--muted); margin-top:2px; max-width:170px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .drop-score-row { display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:10px; background:rgba(139,26,26,0.05); margin:4px 0 6px; }
+  .drop-score-num { font-size:20px; font-weight:800; color:var(--primary); }
+  .drop-score-lbl { font-size:12px; color:var(--muted); line-height:1.3; }
+  .drop-btn {
+    width:100%; padding:9px 12px; border-radius:9px; border:none;
+    background:transparent; color:var(--muted); font-size:13.5px; font-weight:600;
+    cursor:pointer; text-align:left; display:flex; align-items:center; gap:8px;
+    transition:all .15s; font-family:'Be Vietnam Pro',sans-serif;
+  }
+  .drop-btn:hover { background:rgba(139,26,26,0.07); color:var(--primary); }
+  .drop-btn.danger:hover { background:rgba(139,26,26,0.10); color:var(--primary); }
+
+  /* Login Modal */
+  .modal-overlay {
+    position:fixed; inset:0; z-index:500;
+    background:rgba(42,21,6,0.55); backdrop-filter:blur(5px);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .25s;
+  }
+  .modal-overlay.open { opacity:1; pointer-events:all; }
+  .login-modal {
+    background:var(--card); border-radius:26px; padding:44px 40px 36px;
+    max-width:400px; width:92%; box-shadow:0 20px 60px rgba(42,21,6,0.3);
+    border:1.5px solid var(--border); transform:translateY(22px);
+    transition:transform .25s; text-align:center; position:relative;
+  }
+  .modal-overlay.open .login-modal { transform:translateY(0); }
+  .modal-close {
+    position:absolute; top:14px; right:14px; width:32px; height:32px;
+    border-radius:50%; border:none; background:var(--bg2); color:var(--muted);
+    font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .15s;
+  }
+  .modal-close:hover { background:var(--border); color:var(--text); }
+  .modal-logo { font-family:'Noto Serif SC',serif; font-size:48px; line-height:1; margin-bottom:6px; }
+  .modal-title { font-size:23px; font-weight:800; color:var(--text); margin-bottom:8px; }
+  .modal-sub { font-size:13.5px; color:var(--muted); margin-bottom:28px; line-height:1.65; }
+  .btn-google-big {
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    width:100%; padding:14px 20px; border-radius:13px;
+    border:1.5px solid #dadce0; background:#fff;
+    font-size:15px; font-weight:600; color:#3c4043;
+    cursor:pointer; transition:all .2s; font-family:'Be Vietnam Pro',sans-serif;
+    box-shadow:0 1px 4px rgba(0,0,0,0.1);
+  }
+  .btn-google-big:hover { box-shadow:0 4px 14px rgba(66,133,244,0.22); border-color:#4285F4; }
+  .modal-note { font-size:11.5px; color:var(--muted); margin-top:18px; line-height:1.7; }
+
+  /* Hero */
   .hero { max-width:1200px; margin:0 auto; padding:60px 24px 48px; display:grid; grid-template-columns:1fr 420px; gap:40px; align-items:center; }
   .hero h1 { font-size:52px; font-weight:800; line-height:1.1; margin-bottom:8px; }
   .hero h1 span { color:var(--primary); }
@@ -72,8 +139,7 @@
   .hero-stats { display:flex; gap:28px; }
   .hero-stat .num { font-size:24px; font-weight:800; color:var(--primary); }
   .hero-stat .lbl { font-size:12px; color:var(--muted); font-weight:500; }
-
-  .hero-cards { display:grid; grid-template-rows:auto auto auto; gap:12px; }
+  .hero-cards { display:grid; grid-template-rows:auto auto; gap:12px; }
   .char-card { background:var(--card); border-radius:var(--radius); padding:24px 28px; text-align:center; box-shadow:var(--shadow); border:1.5px solid var(--border); }
   .char-big { font-family:'Noto Serif SC',serif; font-size:72px; line-height:1; color:var(--text); }
   .char-pinyin { color:var(--primary); font-size:20px; font-weight:600; margin:6px 0 2px; }
@@ -82,7 +148,6 @@
   .wave-bars span { width:5px; border-radius:3px; background:var(--primary); animation:wave 1.2s ease-in-out infinite; }
   .wave-bars span:nth-child(1){height:12px;animation-delay:.0s}.wave-bars span:nth-child(2){height:22px;animation-delay:.15s}.wave-bars span:nth-child(3){height:18px;animation-delay:.3s}.wave-bars span:nth-child(4){height:26px;animation-delay:.45s}.wave-bars span:nth-child(5){height:16px;animation-delay:.6s}
   @keyframes wave{0%,100%{opacity:.4;transform:scaleY(.7)}50%{opacity:1;transform:scaleY(1)}}
-
   .mini-cards-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   .mini-card { background:var(--card); border-radius:14px; padding:16px; box-shadow:var(--shadow); border:1.5px solid var(--border); }
   .mini-card .mc-label { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
@@ -118,7 +183,6 @@
   .fc-level-btn { padding:5px 14px; border-radius:8px; font-size:13px; font-weight:600; border:1.5px solid var(--border); background:var(--card2); cursor:pointer; transition:all .2s; color:var(--primary); }
   .fc-level-btn.active { background:var(--primary); color:#FAF3E8; border-color:var(--primary); }
   .fc-progress { font-size:13px; color:var(--muted); font-weight:600; }
-
   .fc-stage { perspective:1200px; display:flex; flex-direction:column; align-items:center; }
   .fc-card-wrap { width:100%; max-width:500px; height:280px; cursor:pointer; position:relative; margin-bottom:24px; }
   .fc-card-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.4,0,.2,1); }
@@ -134,7 +198,6 @@
   .fc-back .fc-meaning { font-size:18px; font-weight:600; color:var(--text); }
   .fc-back .fc-example { font-size:14px; color:var(--muted); margin-top:12px; font-style:italic; }
   .fc-back .fc-example-viet { font-size:13px; color:var(--accent2); font-weight:500; }
-
   .fc-write-zone { display:flex; flex-direction:column; align-items:center; width:100%; max-width:500px; margin-bottom:24px; }
   .fc-write-prompt { text-align:center; margin-bottom:16px; }
   .fc-write-prompt .fw-char { font-family:'Noto Serif SC',serif; font-size:28px; color:var(--muted); }
@@ -142,7 +205,6 @@
   .fc-write-prompt .fw-pinyin { font-size:16px; color:var(--primary); font-weight:600; }
   canvas#writeCanvas { border:2px solid var(--border); border-radius:16px; background:var(--card); cursor:crosshair; touch-action:none; box-shadow:0 2px 12px rgba(139,26,26,0.08); }
   .fc-write-btns { display:flex; gap:10px; margin-top:12px; }
-
   .fc-listen-zone { width:100%; max-width:500px; margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
   .listen-card { width:100%; background:linear-gradient(135deg,#4A2010,#7B3F1A); border-radius:20px; padding:32px; text-align:center; color:#FAF3E8; margin-bottom:20px; border:1px solid rgba(200,134,10,0.3); }
   .listen-question { font-size:16px; opacity:.85; margin-bottom:12px; }
@@ -156,7 +218,6 @@
   .listen-option.wrong { border-color:var(--primary); background:rgba(139,26,26,0.08); color:var(--primary); }
   .listen-option .lo-char { font-family:'Noto Serif SC',serif; font-size:28px; display:block; margin-bottom:4px; }
   .listen-option .lo-mean { font-size:12.5px; color:var(--muted); font-weight:400; }
-
   .fc-speak-zone { width:100%; max-width:500px; margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
   .speak-card { width:100%; background:linear-gradient(135deg,#4A2010,#8B1A1A); border-radius:20px; padding:32px; text-align:center; color:#FAF3E8; margin-bottom:20px; border:1px solid rgba(200,134,10,0.3); }
   .speak-char { font-family:'Noto Serif SC',serif; font-size:80px; line-height:1.1; }
@@ -167,7 +228,6 @@
   .mic-btn.recording { background:#6B0F0F; animation:pulse-mic 1s infinite; }
   @keyframes pulse-mic{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
   .speak-status { font-size:13px; color:var(--muted); margin-top:10px; font-weight:500; }
-
   .fc-btn-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
   .btn-fc { padding:11px 22px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; border:none; display:flex; align-items:center; gap:7px; }
   .btn-skip { background:var(--bg2); color:var(--muted); }
@@ -179,10 +239,8 @@
   .btn-next { background:var(--primary); color:#FAF3E8; }
   .btn-clear { background:var(--bg2); color:var(--muted); }
   .btn-check { background:var(--primary); color:#FAF3E8; }
-
   .fc-progress-bar { height:6px; background:var(--bg2); border-radius:3px; margin-bottom:28px; overflow:hidden; }
   .fc-progress-fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:3px; transition:width .4s; }
-
   .hsk-section { max-width:1200px; margin:0 auto; padding:0 24px 60px; }
   .hsk-levels { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
   .hsk-level-card { background:var(--card); border-radius:16px; padding:20px 16px; text-align:center; border:2px solid var(--border); cursor:pointer; transition:all .25s; box-shadow:0 2px 8px rgba(139,26,26,0.05); }
@@ -192,7 +250,6 @@
   .hsk-words { font-size:12px; color:var(--muted); margin:4px 0; }
   .hsk-progress-mini { height:4px; background:var(--bg2); border-radius:2px; margin-top:8px; }
   .hsk-progress-mini-fill { height:100%; border-radius:2px; background:var(--primary); }
-
   .features { background:var(--card2); padding:60px 24px; border-top:1.5px solid var(--border); }
   .features-inner { max-width:1200px; margin:0 auto; }
   .features-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
@@ -202,27 +259,25 @@
   .fi-blue{background:rgba(139,26,26,0.08)}.fi-green{background:rgba(92,122,62,0.10)}.fi-amber{background:rgba(200,134,10,0.10)}.fi-purple{background:rgba(107,15,15,0.08)}
   .feature-card h3 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--text); }
   .feature-card p { font-size:13.5px; color:var(--muted); line-height:1.6; }
-
   footer { background:#2A1506; color:#C8A878; padding:32px 24px; text-align:center; font-size:13px; border-top:2px solid rgba(200,134,10,0.3); }
   footer .f-logo { font-size:20px; font-weight:800; color:#FFE8A0; margin-bottom:8px; font-family:'Noto Serif SC',serif; }
-
   .hidden { display:none !important; }
-
   .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px); background:#2A1506; color:#FAF3E8; padding:12px 24px; border-radius:12px; font-size:14px; font-weight:600; transition:transform .3s; box-shadow:0 4px 20px rgba(42,21,6,0.3); z-index:999; border:1px solid rgba(200,134,10,0.3); }
   .toast.show { transform:translateX(-50%) translateY(0); }
   .toast.green { background:#2D4A1A; }
   .toast.red   { background:#6B0F0F; }
-
   @media(max-width:900px){
     .hero{grid-template-columns:1fr}.hero-cards{display:none}
     .modes-grid{grid-template-columns:repeat(2,1fr)}
     .hsk-levels{grid-template-columns:repeat(3,1fr)}
     .features-grid{grid-template-columns:repeat(2,1fr)}
+    .user-display-name{display:none}
   }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a class="logo" href="#">
@@ -237,10 +292,46 @@
       <a href="#flashcard-section">🃏 Flashcard</a>
       <a href="#hsk-section">📊 HSK</a>
     </div>
-    <div class="nav-btns"></div>
+    <div class="nav-btns">
+
+      <!-- Chưa đăng nhập -->
+      <button class="btn-google-login" id="loginBtn" onclick="openLoginModal()">
+        <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#4285F4" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.7 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#34A853" d="M6.3 14.7l6.6 4.8C14.5 16.3 19 13 24 13c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.7 29.3 4 24 4c-7.6 0-14.2 4.2-17.7 10.7z"/><path fill="#FBBC05" d="M24 44c5.2 0 9.9-2 13.4-5.1l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.6-3.4-11.2-8l-6.6 5.1C9.9 39.8 16.4 44 24 44z"/><path fill="#EA4335" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C41.4 35.4 44 30.1 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+        Đăng nhập
+      </button>
+
+      <!-- Đã đăng nhập -->
+      <div class="user-area hidden" id="userArea">
+        <button class="user-avatar-btn" onclick="toggleDropdown()">
+          <img class="user-avatar-img" id="navAvatar" src="" alt="">
+          <span class="user-display-name" id="navName"></span>
+          <svg class="chevron" width="12" height="12" viewBox="0 0 12 12"><path fill="currentColor" d="M6 8L1 3h10z"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="drop-profile">
+            <img class="drop-avatar" id="dropAvatar" src="" alt="">
+            <div>
+              <div class="drop-name" id="dropName"></div>
+              <div class="drop-email" id="dropEmail"></div>
+            </div>
+          </div>
+          <div class="drop-score-row">
+            <div>
+              <div class="drop-score-num" id="dropScore">0</div>
+              <div class="drop-score-lbl">Thẻ đã thuộc</div>
+            </div>
+            <span style="margin-left:auto;font-size:26px">🏆</span>
+          </div>
+          <button class="drop-btn" onclick="closeDropdown();scrollToFlash()">🃏 Tiếp tục học</button>
+          <button class="drop-btn danger" onclick="signOut()">🚪 Đăng xuất</button>
+        </div>
+      </div>
+
+    </div>
   </div>
 </nav>
 
+<!-- HERO -->
 <section>
   <div class="hero">
     <div>
@@ -250,7 +341,7 @@
         <button class="btn-hero-main" onclick="scrollToFlash()">🚀 Bắt đầu học ngay</button>
         <button class="btn-hero-sec" onclick="scrollToHSK()">📚 Khám phá HSK</button>
       </div>
-      <div class="hero-stats">   
+      <div class="hero-stats">
         <div class="hero-stat"><div class="num">6</div><div class="lbl">Cấp HSK</div></div>
       </div>
     </div>
@@ -280,6 +371,7 @@
   </div>
 </section>
 
+<!-- FLASHCARD -->
 <section id="flashcard-section" class="modes-section">
   <div class="section-title">
     <div class="section-badge">🃏 Học thông minh</div>
@@ -292,12 +384,11 @@
     <div class="mode-card" onclick="setMode('write',this)"><div class="mode-icon">✍️</div><h3>Luyện viết</h3><p>Tập viết chữ Hán trực tiếp</p><span class="mode-count">100 thẻ</span></div>
     <div class="mode-card" onclick="setMode('listen',this)"><div class="mode-icon">🎧</div><h3>Luyện nghe</h3><p>Nghe và nhận diện từ đúng</p><span class="mode-count">80 thẻ</span></div>
   </div>
-
   <div class="flashcard-zone">
     <div class="fc-header">
       <div class="fc-title" id="fcTitle">🃏 Luyện đọc — HSK 1</div>
       <div class="fc-controls">
-        <div class="fc-level-btns" id="levelBtns">
+        <div class="fc-level-btns">
           <button class="fc-level-btn active" onclick="setLevel(1,this)">HSK 1</button>
           <button class="fc-level-btn" onclick="setLevel(2,this)">HSK 2</button>
           <button class="fc-level-btn" onclick="setLevel(3,this)">HSK 3</button>
@@ -306,7 +397,6 @@
       </div>
     </div>
     <div class="fc-progress-bar"><div class="fc-progress-fill" id="fcFill" style="width:10%"></div></div>
-
     <div id="readMode" class="fc-stage">
       <div class="fc-card-wrap" onclick="flipCard()">
         <div class="fc-card-inner" id="fcCardInner">
@@ -330,7 +420,6 @@
         <button class="btn-fc btn-correct" onclick="markCorrect()">✅ Đã thuộc</button>
       </div>
     </div>
-
     <div id="speakMode" class="fc-stage hidden">
       <div class="fc-speak-zone">
         <div class="speak-card">
@@ -346,7 +435,6 @@
         <button class="btn-fc btn-correct" onclick="spokenCorrect()">✅ Phát âm đúng</button>
       </div>
     </div>
-
     <div id="writeMode" class="fc-stage hidden">
       <div class="fc-write-zone">
         <div class="fc-write-prompt">
@@ -363,7 +451,6 @@
       </div>
       <div class="fc-btn-row"><button class="btn-fc btn-skip" onclick="nextCard()">⏭ Bỏ qua</button></div>
     </div>
-
     <div id="listenMode" class="fc-stage hidden">
       <div class="fc-listen-zone">
         <div class="listen-card">
@@ -378,6 +465,7 @@
   </div>
 </section>
 
+<!-- HSK -->
 <section id="hsk-section" class="hsk-section">
   <div class="section-title">
     <div class="section-badge">📊 Lộ trình học</div>
@@ -415,10 +503,150 @@
 </footer>
 <div class="toast" id="toast"></div>
 
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginOverlay" onclick="handleOverlayClick(event)">
+  <div class="login-modal">
+    <button class="modal-close" onclick="closeLoginModal()">✕</button>
+    <div class="modal-logo">汉</div>
+    <div class="modal-title">Đăng nhập</div>
+    <div class="modal-sub">Đăng nhập để lưu tiến độ học tập<br>và xem kết quả của riêng bạn.</div>
+    <button class="btn-google-big" onclick="triggerGoogleSignIn()">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.7 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#34A853" d="M6.3 14.7l6.6 4.8C14.5 16.3 19 13 24 13c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.7 29.3 4 24 4c-7.6 0-14.2 4.2-17.7 10.7z"/><path fill="#FBBC05" d="M24 44c5.2 0 9.9-2 13.4-5.1l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.6-3.4-11.2-8l-6.6 5.1C9.9 39.8 16.4 44 24 44z"/><path fill="#EA4335" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C41.4 35.4 44 30.1 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+      Tiếp tục với Google
+    </button>
+    <!-- Google One Tap container (ẩn, GSI tự xử lý) -->
+    <div id="g_id_onload"
+         data-client_id="YOUR_GOOGLE_CLIENT_ID"
+         data-callback="handleGoogleCredential"
+         data-auto_prompt="false">
+    </div>
+    <p class="modal-note">Tiến độ học được lưu riêng theo tài khoản Google của bạn.<br>Chúng tôi không lưu mật khẩu hay thông tin nhạy cảm.</p>
+  </div>
+</div>
+
 <script>
+/* ═══════════════════════════════════════
+   ⚠️  THAY 2 CHỖ "YOUR_GOOGLE_CLIENT_ID"
+   bằng Client ID thật của bạn (xem hướng dẫn ở cuối file)
+═══════════════════════════════════════ */
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
+
+/* ── AUTH STATE ─────────────────────── */
+let currentUser = null;
+
+function userKey(k){ return currentUser ? `dhsok_${currentUser.id}_${k}` : null; }
+function saveUD(k,v){ const uk=userKey(k); if(uk) localStorage.setItem(uk,JSON.stringify(v)); }
+function loadUD(k,def){ const uk=userKey(k); if(!uk) return def; try{return JSON.parse(localStorage.getItem(uk))??def;}catch{return def;} }
+
+/* ── SCORE ──────────────────────────── */
+let score=0;
+function loadScore(){ score=loadUD('score',0); document.getElementById('dropScore').textContent=score; }
+function saveScore(){ saveUD('score',score); document.getElementById('dropScore').textContent=score; }
+
+/* ── INIT GOOGLE AUTH ───────────────── */
+window.addEventListener('load',()=>{
+  const t=setInterval(()=>{
+    if(typeof google!=='undefined'&&google.accounts){
+      clearInterval(t);
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredential,
+        auto_select: false,
+      });
+      restoreSession();
+    }
+  },200);
+  setTimeout(()=>clearInterval(t),10000);
+});
+
+/* ── HANDLE CREDENTIAL ──────────────── */
+function handleGoogleCredential(resp){
+  const p=parseJwt(resp.credential);
+  if(!p){showToast('❌ Đăng nhập thất bại','red');return;}
+  currentUser={id:p.sub,name:p.name,email:p.email,picture:p.picture};
+  localStorage.setItem('dhsok_session',JSON.stringify(currentUser));
+  onSignedIn(true);
+}
+
+function parseJwt(t){
+  try{return JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));}
+  catch{return null;}
+}
+
+/* ── RESTORE SESSION ────────────────── */
+function restoreSession(){
+  try{
+    const s=localStorage.getItem('dhsok_session');
+    if(s){currentUser=JSON.parse(s);onSignedIn(false);}
+  }catch{}
+}
+
+/* ── ON SIGNED IN ───────────────────── */
+function onSignedIn(welcome){
+  const {name,email,picture}=currentUser;
+  document.getElementById('loginBtn').classList.add('hidden');
+  document.getElementById('userArea').classList.remove('hidden');
+  document.getElementById('navAvatar').src=picture||'';
+  document.getElementById('navName').textContent=name.split(' ').pop();
+  document.getElementById('dropAvatar').src=picture||'';
+  document.getElementById('dropName').textContent=name;
+  document.getElementById('dropEmail').textContent=email;
+  loadScore();
+  closeLoginModal();
+  if(welcome) showToast(`👋 Xin chào, ${name.split(' ').pop()}!`,'green');
+}
+
+/* ── SIGN OUT ───────────────────────── */
+function signOut(){
+  if(typeof google!=='undefined'&&google.accounts) google.accounts.id.disableAutoSelect();
+  localStorage.removeItem('dhsok_session');
+  currentUser=null; score=0;
+  document.getElementById('loginBtn').classList.remove('hidden');
+  document.getElementById('userArea').classList.add('hidden');
+  closeDropdown();
+  showToast('👋 Đã đăng xuất','');
+}
+
+/* ── TRIGGER GOOGLE POPUP ───────────── */
+function triggerGoogleSignIn(){
+  if(GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID'){
+    showToast('⚠️ Chưa cấu hình Google Client ID!','red');
+    return;
+  }
+  if(typeof google==='undefined'||!google.accounts){
+    showToast('⚠️ Google chưa tải xong, thử lại!','');return;
+  }
+  google.accounts.id.prompt((n)=>{
+    /* Nếu One Tap không hiển thị được → mở popup OAuth */
+    if(n.isNotDisplayed()||n.isSkippedMoment()){
+      const p=new URLSearchParams({
+        client_id:GOOGLE_CLIENT_ID,
+        redirect_uri:location.origin+location.pathname,
+        response_type:'token',
+        scope:'openid profile email',
+        prompt:'select_account'
+      });
+      window.open('https://accounts.google.com/o/oauth2/v2/auth?'+p,'_blank','width=500,height=600');
+    }
+  });
+}
+
+/* ── MODAL ──────────────────────────── */
+function openLoginModal(){ document.getElementById('loginOverlay').classList.add('open'); }
+function closeLoginModal(){ document.getElementById('loginOverlay').classList.remove('open'); }
+function handleOverlayClick(e){ if(e.target===document.getElementById('loginOverlay')) closeLoginModal(); }
+
+/* ── DROPDOWN ───────────────────────── */
+function toggleDropdown(){ document.getElementById('userDropdown').classList.toggle('open'); }
+function closeDropdown(){ document.getElementById('userDropdown').classList.remove('open'); }
+document.addEventListener('click',e=>{ const a=document.getElementById('userArea'); if(a&&!a.contains(e.target)) closeDropdown(); });
+
+/* ═══════════════════════════════════════
+   FLASHCARD LOGIC (giữ nguyên + save score)
+═══════════════════════════════════════ */
 const vocab={1:[{char:'你',pinyin:'nǐ',mean:'Bạn / Anh / Chị',ex:'你好吗？(nǐ hǎo ma?)',exV:'Bạn có khỏe không?'},{char:'好',pinyin:'hǎo',mean:'Tốt / Khỏe',ex:'你好！(nǐ hǎo!)',exV:'Xin chào!'},{char:'我',pinyin:'wǒ',mean:'Tôi',ex:'我是学生。',exV:'Tôi là học sinh.'},{char:'他',pinyin:'tā',mean:'Anh ấy / Ông ấy',ex:'他很高。',exV:'Anh ấy rất cao.'},{char:'她',pinyin:'tā',mean:'Cô ấy / Bà ấy',ex:'她很美。',exV:'Cô ấy rất đẹp.'},{char:'爱',pinyin:'ài',mean:'Yêu',ex:'我爱你。',exV:'Tôi yêu bạn.'},{char:'水',pinyin:'shuǐ',mean:'Nước',ex:'喝水。',exV:'Uống nước.'},{char:'吃',pinyin:'chī',mean:'Ăn',ex:'我想吃饭。',exV:'Tôi muốn ăn cơm.'},{char:'学',pinyin:'xué',mean:'Học',ex:'学习汉语。',exV:'Học tiếng Trung.'},{char:'大',pinyin:'dà',mean:'To / Lớn',ex:'很大。',exV:'Rất to.'}],2:[{char:'学习',pinyin:'xuéxí',mean:'Học tập',ex:'我喜欢学习。',exV:'Tôi thích học tập.'},{char:'谢谢',pinyin:'xièxiè',mean:'Cảm ơn',ex:'非常谢谢！',exV:'Cảm ơn rất nhiều!'},{char:'朋友',pinyin:'péngyou',mean:'Bạn bè',ex:'好朋友。',exV:'Bạn tốt.'},{char:'高兴',pinyin:'gāoxìng',mean:'Vui mừng',ex:'很高兴认识你。',exV:'Rất vui được gặp bạn.'},{char:'漂亮',pinyin:'piàoliang',mean:'Đẹp / Xinh đẹp',ex:'她很漂亮。',exV:'Cô ấy rất xinh.'},{char:'工作',pinyin:'gōngzuò',mean:'Làm việc',ex:'你工作吗？',exV:'Bạn có đi làm không?'},{char:'喜欢',pinyin:'xǐhuān',mean:'Thích',ex:'我喜欢音乐。',exV:'Tôi thích âm nhạc.'},{char:'时间',pinyin:'shíjiān',mean:'Thời gian',ex:'没有时间。',exV:'Không có thời gian.'}],3:[{char:'经验',pinyin:'jīngyàn',mean:'Kinh nghiệm',ex:'有经验。',exV:'Có kinh nghiệm.'},{char:'环境',pinyin:'huánjìng',mean:'Môi trường',ex:'好环境。',exV:'Môi trường tốt.'},{char:'努力',pinyin:'nǔlì',mean:'Cố gắng / Nỗ lực',ex:'努力学习。',exV:'Nỗ lực học tập.'},{char:'文化',pinyin:'wénhuà',mean:'Văn hóa',ex:'中国文化。',exV:'Văn hóa Trung Quốc.'},{char:'机会',pinyin:'jīhuì',mean:'Cơ hội',ex:'好机会。',exV:'Cơ hội tốt.'},{char:'意思',pinyin:'yìsi',mean:'Ý nghĩa / Thú vị',ex:'什么意思？',exV:'Có nghĩa là gì?'}]};
 
-let curMode='read',curLevel=1,curIdx=0,score=0,isFlipped=false,isMicOn=false;
+let curMode='read',curLevel=1,curIdx=0,isFlipped=false,isMicOn=false;
 function getCards(){return vocab[curLevel]||vocab[1];}
 function setMode(m,el){curMode=m;curIdx=0;isFlipped=false;document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('active'));el.classList.add('active');['readMode','speakMode','writeMode','listenMode'].forEach(id=>document.getElementById(id).classList.add('hidden'));const map={read:'readMode',speak:'speakMode',write:'writeMode',listen:'listenMode'};document.getElementById(map[m]).classList.remove('hidden');const titles={read:'🃏 Luyện đọc',speak:'🗣️ Luyện nói',write:'✍️ Luyện viết',listen:'🎧 Luyện nghe'};document.getElementById('fcTitle').textContent=titles[m]+` — HSK ${curLevel}`;updateProgress();renderCard();}
 function setLevel(l,el){curLevel=l;curIdx=0;isFlipped=false;document.querySelectorAll('.fc-level-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('fcTitle').textContent=document.getElementById('fcTitle').textContent.replace(/HSK \d/,`HSK ${l}`);updateProgress();renderCard();}
@@ -426,11 +654,10 @@ function updateProgress(){const cards=getCards(),idx=curIdx+1,total=cards.length
 function renderCard(){const cards=getCards(),c=cards[curIdx%cards.length];isFlipped=false;document.getElementById('fcCardInner').classList.remove('flipped');document.getElementById('fcChar').textContent=c.char;document.getElementById('fcPinyin').textContent=c.pinyin;document.getElementById('fcCharBack').textContent=c.char;document.getElementById('fcPinyinBack').textContent=c.pinyin;document.getElementById('fcMeaning').textContent=c.mean;document.getElementById('fcExample').textContent=c.ex;document.getElementById('fcExampleViet').textContent='➤ '+c.exV;document.getElementById('spChar').textContent=c.char;document.getElementById('spMeaning').textContent=c.mean;document.getElementById('spPinyin').textContent=c.pinyin;document.getElementById('wrMeaning').textContent=c.mean;document.getElementById('wrPinyin').textContent=c.pinyin;document.getElementById('wrHint').textContent='✏️ Viết chữ Hán: '+c.char.split('').map(()=>'□').join(' ');clearCanvas();renderListenOptions(c);updateProgress();}
 function flipCard(){isFlipped=!isFlipped;document.getElementById('fcCardInner').classList.toggle('flipped',isFlipped);}
 function nextCard(){curIdx=(curIdx+1)%getCards().length;renderCard();}
-function markCorrect(){score++;showToast('✅ Tuyệt vời! Đã thuộc rồi!','green');nextCard();}
+function markCorrect(){score++;saveScore();showToast('✅ Tuyệt vời! Đã thuộc rồi!','green');nextCard();}
 function markWrong(){showToast('💪 Cố lên! Ôn lại nhé.','red');nextCard();}
-function toggleMic(){isMicOn=!isMicOn;const btn=document.getElementById('micBtn'),status=document.getElementById('spStatus');if(isMicOn){btn.classList.add('recording');btn.textContent='⏹';status.textContent='🔴 Đang ghi âm... Nói to và rõ!';}else{btn.classList.remove('recording');btn.textContent='🎤';status.textContent='⏳ Đang phân tích phát âm...';setTimeout(()=>{const ok=Math.random()>.3;status.textContent=ok?'✅ Phát âm tốt! Tiếp tục nhé.':'🔶 Cần cải thiện thanh điệu.';showToast(ok?'👏 Phát âm chuẩn!':'🔄 Luyện thêm thanh điệu nhé!',ok?'green':'');},1200);}}
-function spokenCorrect(){showToast('✅ Đánh dấu đúng!','green');nextCard();}
-
+function toggleMic(){isMicOn=!isMicOn;const btn=document.getElementById('micBtn'),st=document.getElementById('spStatus');if(isMicOn){btn.classList.add('recording');btn.textContent='⏹';st.textContent='🔴 Đang ghi âm... Nói to và rõ!';}else{btn.classList.remove('recording');btn.textContent='🎤';st.textContent='⏳ Đang phân tích...';setTimeout(()=>{const ok=Math.random()>.3;st.textContent=ok?'✅ Phát âm tốt!':'🔶 Cần cải thiện thanh điệu.';showToast(ok?'👏 Phát âm chuẩn!':'🔄 Luyện thêm nhé!',ok?'green':'');},1200);}}
+function spokenCorrect(){score++;saveScore();showToast('✅ Đánh dấu đúng!','green');nextCard();}
 const canvas=document.getElementById('writeCanvas'),ctx=canvas.getContext('2d');
 let drawing=false,lastX=0,lastY=0;
 function getPos(e){const r=canvas.getBoundingClientRect();if(e.touches)return{x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top};return{x:e.clientX-r.left,y:e.clientY-r.top};}
@@ -441,12 +668,11 @@ canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const p
 canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=getPos(e);drawStroke(lastX,lastY,p.x,p.y);lastX=p.x;lastY=p.y;});
 canvas.addEventListener('touchend',()=>drawing=false);
 function drawStroke(x1,y1,x2,y2){ctx.strokeStyle='#2A1506';ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
-function clearCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#D4B896';ctx.lineWidth=1;const step=canvas.width/4;for(let i=step;i<canvas.width;i+=step){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,canvas.height);ctx.stroke();}for(let i=step;i<canvas.height;i+=step){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(canvas.width,i);ctx.stroke();}ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(canvas.width,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(canvas.width,0);ctx.lineTo(0,canvas.height);ctx.stroke();}
-function checkWrite(){const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;const has=Array.from(data).some((v,i)=>i%4===3&&v>10);if(!has){showToast('✏️ Hãy viết chữ trước!','');return;}showToast('✅ Đã ghi lại! Nhấn "Xem đáp án" để so sánh.','green');}
+function clearCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#D4B896';ctx.lineWidth=1;const s=canvas.width/4;for(let i=s;i<canvas.width;i+=s){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,canvas.height);ctx.stroke();}for(let i=s;i<canvas.height;i+=s){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(canvas.width,i);ctx.stroke();}ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(canvas.width,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(canvas.width,0);ctx.lineTo(0,canvas.height);ctx.stroke();}
+function checkWrite(){const d=ctx.getImageData(0,0,canvas.width,canvas.height).data;if(!Array.from(d).some((v,i)=>i%4===3&&v>10)){showToast('✏️ Hãy viết chữ trước!','');return;}showToast('✅ Nhấn "Xem đáp án" để so sánh.','green');}
 function showWriteAnswer(){const c=getCards()[curIdx%getCards().length];ctx.font=`140px "Noto Serif SC",serif`;ctx.fillStyle='rgba(139,26,26,0.12)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(c.char,canvas.width/2,canvas.height/2);showToast(`📖 Đáp án: ${c.char} (${c.pinyin})`,'');}
-function renderListenOptions(correct){const all=getCards();let opts=[correct];const others=all.filter(w=>w.char!==correct.char);while(opts.length<4&&others.length>0){const r=others.splice(Math.floor(Math.random()*others.length),1)[0];opts.push(r);}opts=opts.sort(()=>Math.random()-.5);const container=document.getElementById('listenOptions');container.innerHTML='';opts.forEach(w=>{const d=document.createElement('div');d.className='listen-option';d.innerHTML=`<span class="lo-char">${w.char}</span><span class="lo-mean">${w.mean}</span>`;d.onclick=()=>selectListenOption(d,w.char===correct.char);container.appendChild(d);});}
-function selectListenOption(el,isCorrect){document.querySelectorAll('.listen-option').forEach(o=>{o.onclick=null;});el.classList.add(isCorrect?'correct':'wrong');showToast(isCorrect?'🎉 Chính xác!':'❌ Sai rồi! Thử lại nhé.',isCorrect?'green':'red');}
-function playAudio(){const c=getCards()[curIdx%getCards().length];if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(c.char);u.lang='zh-CN';u.rate=0.8;u.pitch=1;speechSynthesis.speak(u);showToast(`🔊 Đang phát: ${c.char}`,'');}else showToast('⚠️ Trình duyệt chưa hỗ trợ TTS','');}
+function renderListenOptions(correct){const all=getCards();let opts=[correct];const others=all.filter(w=>w.char!==correct.char);while(opts.length<4&&others.length>0){const r=others.splice(Math.floor(Math.random()*others.length),1)[0];opts.push(r);}opts=opts.sort(()=>Math.random()-.5);const ct=document.getElementById('listenOptions');ct.innerHTML='';opts.forEach(w=>{const d=document.createElement('div');d.className='listen-option';d.innerHTML=`<span class="lo-char">${w.char}</span><span class="lo-mean">${w.mean}</span>`;d.onclick=()=>{document.querySelectorAll('.listen-option').forEach(o=>o.onclick=null);d.classList.add(w.char===correct.char?'correct':'wrong');if(w.char===correct.char){score++;saveScore();}showToast(w.char===correct.char?'🎉 Chính xác!':'❌ Sai rồi!',w.char===correct.char?'green':'red');};ct.appendChild(d);});}
+function playAudio(){const c=getCards()[curIdx%getCards().length];if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(c.char);u.lang='zh-CN';u.rate=0.8;speechSynthesis.speak(u);showToast(`🔊 Đang phát: ${c.char}`,'')}else showToast('⚠️ Trình duyệt chưa hỗ trợ TTS','');}
 function setHSKCard(l,el){document.querySelectorAll('.hsk-level-card').forEach(c=>c.classList.remove('active'));el.classList.add('active');}
 function scrollToFlash(){document.getElementById('flashcard-section').scrollIntoView({behavior:'smooth'});}
 function scrollToHSK(){document.getElementById('hsk-section').scrollIntoView({behavior:'smooth'});}
@@ -454,5 +680,27 @@ let toastTimer;
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);}
 clearCanvas();renderCard();
 </script>
+
+<!--
+════════════════════════════════════════════════════════════
+  📌 HƯỚNG DẪN LẤY GOOGLE CLIENT ID
+════════════════════════════════════════════════════════════
+
+  1. Vào: https://console.cloud.google.com/
+  2. Tạo project mới → "APIs & Services" → "Credentials"
+  3. "+ CREATE CREDENTIALS" → "OAuth client ID"
+  4. Application type: "Web application"
+  5. Authorized JavaScript origins → thêm:
+       https://doanmika23122007-tech.github.io
+       http://localhost (nếu test local)
+  6. Nhấn CREATE → copy Client ID (dạng xxx.apps.googleusercontent.com)
+  7. Thay "YOUR_GOOGLE_CLIENT_ID" ở 2 chỗ trong file:
+       - const GOOGLE_CLIENT_ID = 'xxx...'   (trong thẻ <script>)
+       - data-client_id="xxx..."              (trong thẻ div#g_id_onload)
+  8. Vào "OAuth consent screen" → thêm email vào "Test users"
+  9. Push lên GitHub → đăng nhập Google sẽ hoạt động thật!
+
+════════════════════════════════════════════════════════════
+-->
 </body>
 </html>
