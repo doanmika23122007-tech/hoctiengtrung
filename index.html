@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Học Tiếng Trung cùng Doan_Huy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root {
+    --primary:       #8B1A1A;
+    --primary-light: #B22222;
+    --primary-dark:  #6B0F0F;
+    --accent:        #C8860A;
+    --accent2:       #5C7A3E;
+    --bg:            #F2E8D5;
+    --bg2:           #EAD9BF;
+    --card:          #FAF3E8;
+    --card2:         #F5EAD4;
+    --text:          #2A1506;
+    --muted:         #7A5C3A;
+    --border:        #D4B896;
+    --shadow:        0 4px 24px rgba(139,26,26,0.10);
+    --radius:        18px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238B1A1A' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* NAV */
+  nav { background:var(--card); border-bottom:2px solid var(--border); position:sticky; top:0; z-index:200; box-shadow:0 2px 16px rgba(139,26,26,0.08); }
+  .nav-inner { max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; gap:8px; height:64px; }
+  .logo { display:flex; align-items:center; gap:10px; text-decoration:none; margin-right:16px; }
+  .logo-icon { width:42px; height:42px; border-radius:10px; background:linear-gradient(135deg,#8B1A1A,#C8860A); display:flex; align-items:center; justify-content:center; font-family:'Noto Serif SC',serif; font-size:20px; font-weight:700; color:#FFE8A0; box-shadow:0 2px 10px rgba(139,26,26,0.35); }
+  .logo-text { font-weight:800; font-size:20px; color:var(--primary); }
+  .logo-sub { font-size:11px; color:var(--muted); display:block; margin-top:-4px; font-weight:400; }
+  .nav-links { display:flex; gap:2px; flex:1; }
+  .nav-links a { padding:6px 14px; border-radius:8px; font-size:13.5px; font-weight:500; color:var(--muted); text-decoration:none; transition:all .2s; white-space:nowrap; }
+  .nav-links a:hover, .nav-links a.active { background:rgba(139,26,26,0.08); color:var(--primary); font-weight:600; }
+  .nav-btns { display:flex; gap:8px; margin-left:auto; align-items:center; }
+
+  /* Google Login Button (small, in nav) */
+  .btn-google-login {
+    display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:10px;
+    border:1.5px solid var(--border); background:var(--card); color:var(--text);
+    font-size:13.5px; font-weight:600; cursor:pointer; transition:all .2s;
+    font-family:'Be Vietnam Pro',sans-serif; white-space:nowrap;
+  }
+  .btn-google-login:hover { border-color:#4285F4; color:#4285F4; box-shadow:0 2px 8px rgba(66,133,244,0.15); }
+
+  /* User Avatar Area */
+  .user-area { position:relative; display:flex; align-items:center; }
+  .user-avatar-btn {
+    display:flex; align-items:center; gap:8px; padding:4px 12px 4px 4px;
+    border-radius:30px; border:1.5px solid var(--border); background:var(--card);
+    cursor:pointer; transition:all .2s;
+  }
+  .user-avatar-btn:hover { border-color:var(--primary); box-shadow:0 2px 8px rgba(139,26,26,0.12); }
+  .user-avatar-img { width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid var(--border); }
+  .user-display-name { font-size:13px; font-weight:600; color:var(--text); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .chevron { color:var(--muted); flex-shrink:0; }
+
+  /* Dropdown */
+  .user-dropdown {
+    position:absolute; top:calc(100% + 10px); right:0; background:var(--card);
+    border:1.5px solid var(--border); border-radius:16px; padding:8px; min-width:250px;
+    box-shadow:0 8px 32px rgba(42,21,6,0.18); z-index:300; display:none;
+    animation:fadeDown .18s ease;
+  }
+  .user-dropdown.open { display:block; }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .drop-profile { display:flex; align-items:center; gap:12px; padding:10px 8px 14px; border-bottom:1px solid var(--border); margin-bottom:6px; }
+  .drop-avatar { width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid var(--primary); flex-shrink:0; }
+  .drop-name { font-size:14px; font-weight:700; color:var(--text); }
+  .drop-email { font-size:11.5px; color:var(--muted); margin-top:2px; max-width:170px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .drop-score-row { display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:10px; background:rgba(139,26,26,0.05); margin:4px 0 6px; }
+  .drop-score-num { font-size:20px; font-weight:800; color:var(--primary); }
+  .drop-score-lbl { font-size:12px; color:var(--muted); line-height:1.3; }
+  .drop-btn {
+    width:100%; padding:9px 12px; border-radius:9px; border:none;
+    background:transparent; color:var(--muted); font-size:13.5px; font-weight:600;
+    cursor:pointer; text-align:left; display:flex; align-items:center; gap:8px;
+    transition:all .15s; font-family:'Be Vietnam Pro',sans-serif;
+  }
+  .drop-btn:hover { background:rgba(139,26,26,0.07); color:var(--primary); }
+  .drop-btn.danger:hover { background:rgba(139,26,26,0.10); color:var(--primary); }
+
+  /* Login Modal */
+  .modal-overlay {
+    position:fixed; inset:0; z-index:500;
+    background:rgba(42,21,6,0.55); backdrop-filter:blur(5px);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .25s;
+  }
+  .modal-overlay.open { opacity:1; pointer-events:all; }
+  .login-modal {
+    background:var(--card); border-radius:26px; padding:44px 40px 36px;
+    max-width:400px; width:92%; box-shadow:0 20px 60px rgba(42,21,6,0.3);
+    border:1.5px solid var(--border); transform:translateY(22px);
+    transition:transform .25s; text-align:center; position:relative;
+  }
+  .modal-overlay.open .login-modal { transform:translateY(0); }
+  .modal-close {
+    position:absolute; top:14px; right:14px; width:32px; height:32px;
+    border-radius:50%; border:none; background:var(--bg2); color:var(--muted);
+    font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .15s;
+  }
+  .modal-close:hover { background:var(--border); color:var(--text); }
+  .modal-logo { font-family:'Noto Serif SC',serif; font-size:48px; line-height:1; margin-bottom:6px; }
+  .modal-title { font-size:23px; font-weight:800; color:var(--text); margin-bottom:8px; }
+  .modal-sub { font-size:13.5px; color:var(--muted); margin-bottom:28px; line-height:1.65; }
+  .btn-google-big {
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    width:100%; padding:14px 20px; border-radius:13px;
+    border:1.5px solid #dadce0; background:#fff;
+    font-size:15px; font-weight:600; color:#3c4043;
+    cursor:pointer; transition:all .2s; font-family:'Be Vietnam Pro',sans-serif;
+    box-shadow:0 1px 4px rgba(0,0,0,0.1);
+  }
+  .btn-google-big:hover { box-shadow:0 4px 14px rgba(66,133,244,0.22); border-color:#4285F4; }
+  .modal-note { font-size:11.5px; color:var(--muted); margin-top:18px; line-height:1.7; }
+
+  /* Hero */
+  .hero { max-width:1200px; margin:0 auto; padding:60px 24px 48px; display:grid; grid-template-columns:1fr 420px; gap:40px; align-items:center; }
+  .hero h1 { font-size:52px; font-weight:800; line-height:1.1; margin-bottom:8px; }
+  .hero h1 span { color:var(--primary); }
+  .hero p { font-size:16px; color:var(--muted); line-height:1.7; max-width:480px; margin-bottom:28px; }
+  .hero-btns { display:flex; gap:12px; margin-bottom:32px; flex-wrap:wrap; }
+  .btn-hero-main { padding:14px 28px; border-radius:12px; background:var(--primary); color:#FAF3E8; font-size:15px; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all .25s; box-shadow:0 4px 16px rgba(139,26,26,0.35); }
+  .btn-hero-main:hover { background:var(--primary-dark); transform:translateY(-2px); }
+  .btn-hero-sec { padding:14px 28px; border-radius:12px; background:var(--card); color:var(--text); font-size:15px; font-weight:700; border:1.5px solid var(--border); cursor:pointer; display:flex; align-items:center; gap:8px; transition:all .25s; }
+  .btn-hero-sec:hover { border-color:var(--primary); color:var(--primary); }
+  .hero-stats { display:flex; gap:28px; }
+  .hero-stat .num { font-size:24px; font-weight:800; color:var(--primary); }
+  .hero-stat .lbl { font-size:12px; color:var(--muted); font-weight:500; }
+  .hero-cards { display:grid; grid-template-rows:auto auto; gap:12px; }
+  .char-card { background:var(--card); border-radius:var(--radius); padding:24px 28px; text-align:center; box-shadow:var(--shadow); border:1.5px solid var(--border); }
+  .char-big { font-family:'Noto Serif SC',serif; font-size:72px; line-height:1; color:var(--text); }
+  .char-pinyin { color:var(--primary); font-size:20px; font-weight:600; margin:6px 0 2px; }
+  .char-viet { color:var(--muted); font-size:14px; }
+  .wave-bars { display:flex; gap:3px; align-items:flex-end; justify-content:center; margin-top:12px; height:28px; }
+  .wave-bars span { width:5px; border-radius:3px; background:var(--primary); animation:wave 1.2s ease-in-out infinite; }
+  .wave-bars span:nth-child(1){height:12px;animation-delay:.0s}.wave-bars span:nth-child(2){height:22px;animation-delay:.15s}.wave-bars span:nth-child(3){height:18px;animation-delay:.3s}.wave-bars span:nth-child(4){height:26px;animation-delay:.45s}.wave-bars span:nth-child(5){height:16px;animation-delay:.6s}
+  @keyframes wave{0%,100%{opacity:.4;transform:scaleY(.7)}50%{opacity:1;transform:scaleY(1)}}
+  .mini-cards-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .mini-card { background:var(--card); border-radius:14px; padding:16px; box-shadow:var(--shadow); border:1.5px solid var(--border); }
+  .mini-card .mc-label { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+  .hsk-dots { display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+  .hsk-dot { width:28px; height:28px; border-radius:50%; background:var(--primary); color:#FAF3E8; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; }
+  .hsk-dot.inactive { background:var(--bg2); color:var(--muted); }
+  .hsk-bar { height:5px; border-radius:3px; background:var(--bg2); margin-top:6px; }
+  .hsk-bar-fill { width:45%; height:100%; border-radius:3px; background:var(--primary); }
+  .streak-num { font-size:36px; font-weight:800; color:var(--accent); }
+  .streak-lbl { font-size:12px; color:var(--muted); }
+
+  .section-title { text-align:center; margin-bottom:40px; }
+  .section-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(139,26,26,0.08); border:1px solid rgba(139,26,26,0.25); border-radius:20px; padding:5px 14px; font-size:12.5px; font-weight:600; color:var(--primary); margin-bottom:12px; }
+  .section-title h2 { font-size:36px; font-weight:800; color:var(--text); }
+  .section-title h2 span { color:var(--primary); }
+  .section-title p { color:var(--muted); font-size:15px; margin-top:8px; }
+
+  .modes-section { max-width:1200px; margin:0 auto; padding:0 24px 60px; }
+  .modes-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:40px; }
+  .mode-card { background:var(--card); border-radius:var(--radius); padding:24px 20px; text-align:center; cursor:pointer; border:2px solid var(--border); transition:all .25s; box-shadow:0 2px 8px rgba(139,26,26,0.06); }
+  .mode-card:hover { transform:translateY(-4px); box-shadow:0 8px 28px rgba(139,26,26,0.15); border-color:var(--primary); }
+  .mode-card.active { border-color:var(--primary); background:rgba(139,26,26,0.06); }
+  .mode-icon { font-size:36px; margin-bottom:10px; }
+  .mode-card h3 { font-size:16px; font-weight:700; margin-bottom:4px; color:var(--text); }
+  .mode-card p { font-size:12.5px; color:var(--muted); }
+  .mode-card .mode-count { display:inline-block; margin-top:10px; padding:3px 10px; border-radius:20px; background:var(--bg2); font-size:11.5px; font-weight:600; color:var(--primary); }
+
+  .flashcard-zone { background:var(--card); border-radius:24px; padding:36px; box-shadow:var(--shadow); border:1.5px solid var(--border); }
+  .fc-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
+  .fc-title { font-size:20px; font-weight:700; color:var(--text); }
+  .fc-controls { display:flex; gap:10px; align-items:center; }
+  .fc-level-btns { display:flex; gap:6px; }
+  .fc-level-btn { padding:5px 14px; border-radius:8px; font-size:13px; font-weight:600; border:1.5px solid var(--border); background:var(--card2); cursor:pointer; transition:all .2s; color:var(--primary); }
+  .fc-level-btn.active { background:var(--primary); color:#FAF3E8; border-color:var(--primary); }
+  .fc-progress { font-size:13px; color:var(--muted); font-weight:600; }
+  .fc-stage { perspective:1200px; display:flex; flex-direction:column; align-items:center; }
+  .fc-card-wrap { width:100%; max-width:500px; height:280px; cursor:pointer; position:relative; margin-bottom:24px; }
+  .fc-card-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.4,0,.2,1); }
+  .fc-card-inner.flipped { transform:rotateY(180deg); }
+  .fc-face { position:absolute; inset:0; border-radius:20px; backface-visibility:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px; }
+  .fc-front { background:linear-gradient(135deg,#6B0F0F 0%,#8B1A1A 55%,#C8860A 100%); color:#FAF3E8; }
+  .fc-back { background:var(--card); border:2px solid var(--border); transform:rotateY(180deg); color:var(--text); }
+  .fc-char { font-family:'Noto Serif SC',serif; font-size:90px; line-height:1; }
+  .fc-pinyin-front { font-size:22px; margin-top:8px; opacity:.9; font-weight:600; letter-spacing:2px; color:#FFE8A0; }
+  .fc-hint { font-size:13px; opacity:.65; margin-top:12px; }
+  .fc-back .fc-char { color:var(--primary); font-size:72px; }
+  .fc-back .fc-pinyin { color:var(--primary); font-size:22px; font-weight:700; margin:6px 0; }
+  .fc-back .fc-meaning { font-size:18px; font-weight:600; color:var(--text); }
+  .fc-back .fc-example { font-size:14px; color:var(--muted); margin-top:12px; font-style:italic; }
+  .fc-back .fc-example-viet { font-size:13px; color:var(--accent2); font-weight:500; }
+  .fc-write-zone { display:flex; flex-direction:column; align-items:center; width:100%; max-width:500px; margin-bottom:24px; }
+  .fc-write-prompt { text-align:center; margin-bottom:16px; }
+  .fc-write-prompt .fw-char { font-family:'Noto Serif SC',serif; font-size:28px; color:var(--muted); }
+  .fc-write-prompt .fw-meaning { font-size:22px; font-weight:700; margin-bottom:4px; color:var(--text); }
+  .fc-write-prompt .fw-pinyin { font-size:16px; color:var(--primary); font-weight:600; }
+  canvas#writeCanvas { border:2px solid var(--border); border-radius:16px; background:var(--card); cursor:crosshair; touch-action:none; box-shadow:0 2px 12px rgba(139,26,26,0.08); }
+  .fc-write-btns { display:flex; gap:10px; margin-top:12px; }
+  .fc-listen-zone { width:100%; max-width:500px; margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
+  .listen-card { width:100%; background:linear-gradient(135deg,#4A2010,#7B3F1A); border-radius:20px; padding:32px; text-align:center; color:#FAF3E8; margin-bottom:20px; border:1px solid rgba(200,134,10,0.3); }
+  .listen-question { font-size:16px; opacity:.85; margin-bottom:12px; }
+  .listen-icon { font-size:56px; margin-bottom:8px; cursor:pointer; }
+  .listen-btn { padding:12px 28px; border-radius:12px; background:rgba(250,243,232,.15); border:1.5px solid rgba(250,243,232,.35); color:#FAF3E8; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .listen-btn:hover { background:rgba(250,243,232,.25); }
+  .listen-options { display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; }
+  .listen-option { padding:16px; border-radius:14px; background:var(--card); border:2px solid var(--border); cursor:pointer; text-align:center; transition:all .2s; font-weight:600; color:var(--text); }
+  .listen-option:hover { border-color:var(--primary); color:var(--primary); }
+  .listen-option.correct { border-color:var(--accent2); background:rgba(92,122,62,0.12); color:#3A5C20; }
+  .listen-option.wrong { border-color:var(--primary); background:rgba(139,26,26,0.08); color:var(--primary); }
+  .listen-option .lo-char { font-family:'Noto Serif SC',serif; font-size:28px; display:block; margin-bottom:4px; }
+  .listen-option .lo-mean { font-size:12.5px; color:var(--muted); font-weight:400; }
+  .fc-speak-zone { width:100%; max-width:500px; margin-bottom:24px; display:flex; flex-direction:column; align-items:center; }
+  .speak-card { width:100%; background:linear-gradient(135deg,#4A2010,#8B1A1A); border-radius:20px; padding:32px; text-align:center; color:#FAF3E8; margin-bottom:20px; border:1px solid rgba(200,134,10,0.3); }
+  .speak-char { font-family:'Noto Serif SC',serif; font-size:80px; line-height:1.1; }
+  .speak-meaning { font-size:18px; opacity:.8; margin-top:8px; }
+  .speak-pinyin { font-size:20px; font-weight:700; color:#FFE8A0; margin-top:4px; }
+  .mic-btn { width:80px; height:80px; border-radius:50%; background:var(--primary); border:none; cursor:pointer; font-size:32px; display:flex; align-items:center; justify-content:center; transition:all .25s; box-shadow:0 4px 20px rgba(139,26,26,.4); }
+  .mic-btn:hover { transform:scale(1.08); }
+  .mic-btn.recording { background:#6B0F0F; animation:pulse-mic 1s infinite; }
+  @keyframes pulse-mic{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+  .speak-status { font-size:13px; color:var(--muted); margin-top:10px; font-weight:500; }
+  .fc-btn-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn-fc { padding:11px 22px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; border:none; display:flex; align-items:center; gap:7px; }
+  .btn-skip { background:var(--bg2); color:var(--muted); }
+  .btn-skip:hover { background:var(--border); }
+  .btn-wrong { background:rgba(139,26,26,0.10); color:var(--primary); border:1px solid rgba(139,26,26,0.2); }
+  .btn-wrong:hover { background:rgba(139,26,26,0.18); }
+  .btn-correct { background:rgba(92,122,62,0.12); color:#3A5C20; border:1px solid rgba(92,122,62,0.25); }
+  .btn-correct:hover { background:rgba(92,122,62,0.20); }
+  .btn-next { background:var(--primary); color:#FAF3E8; }
+  .btn-clear { background:var(--bg2); color:var(--muted); }
+  .btn-check { background:var(--primary); color:#FAF3E8; }
+  .fc-progress-bar { height:6px; background:var(--bg2); border-radius:3px; margin-bottom:28px; overflow:hidden; }
+  .fc-progress-fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:3px; transition:width .4s; }
+  .hsk-section { max-width:1200px; margin:0 auto; padding:0 24px 60px; }
+  .hsk-levels { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+  .hsk-level-card { background:var(--card); border-radius:16px; padding:20px 16px; text-align:center; border:2px solid var(--border); cursor:pointer; transition:all .25s; box-shadow:0 2px 8px rgba(139,26,26,0.05); }
+  .hsk-level-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(139,26,26,0.12); border-color:var(--primary); }
+  .hsk-level-card.active { border-color:var(--primary); background:rgba(139,26,26,0.06); }
+  .hsk-num { font-size:32px; font-weight:800; color:var(--primary); }
+  .hsk-words { font-size:12px; color:var(--muted); margin:4px 0; }
+  .hsk-progress-mini { height:4px; background:var(--bg2); border-radius:2px; margin-top:8px; }
+  .hsk-progress-mini-fill { height:100%; border-radius:2px; background:var(--primary); }
+  .features { background:var(--card2); padding:60px 24px; border-top:1.5px solid var(--border); }
+  .features-inner { max-width:1200px; margin:0 auto; }
+  .features-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .feature-card { padding:24px; border-radius:var(--radius); border:1.5px solid var(--border); background:var(--card); transition:all .2s; }
+  .feature-card:hover { box-shadow:var(--shadow); transform:translateY(-2px); }
+  .feature-icon { width:48px; height:48px; border-radius:12px; margin-bottom:14px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+  .fi-blue{background:rgba(139,26,26,0.08)}.fi-green{background:rgba(92,122,62,0.10)}.fi-amber{background:rgba(200,134,10,0.10)}.fi-purple{background:rgba(107,15,15,0.08)}
+  .feature-card h3 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--text); }
+  .feature-card p { font-size:13.5px; color:var(--muted); line-height:1.6; }
+  footer { background:#2A1506; color:#C8A878; padding:32px 24px; text-align:center; font-size:13px; border-top:2px solid rgba(200,134,10,0.3); }
+  footer .f-logo { font-size:20px; font-weight:800; color:#FFE8A0; margin-bottom:8px; font-family:'Noto Serif SC',serif; }
+  .hidden { display:none !important; }
+  .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px); background:#2A1506; color:#FAF3E8; padding:12px 24px; border-radius:12px; font-size:14px; font-weight:600; transition:transform .3s; box-shadow:0 4px 20px rgba(42,21,6,0.3); z-index:999; border:1px solid rgba(200,134,10,0.3); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.green { background:#2D4A1A; }
+  .toast.red   { background:#6B0F0F; }
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr}.hero-cards{display:none}
+    .modes-grid{grid-template-columns:repeat(2,1fr)}
+    .hsk-levels{grid-template-columns:repeat(3,1fr)}
+    .features-grid{grid-template-columns:repeat(2,1fr)}
+    .user-display-name{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">汉</div>
+      <div>
+        <div class="logo-text">NHD</div>
+        <span class="logo-sub">Học Tiếng Trung Quốc</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#" class="active">🏠 Trang chủ</a>
+      <a href="#flashcard-section">🃏 Flashcard</a>
+      <a href="#hsk-section">📊 HSK</a>
+    </div>
+    <div class="nav-btns">
+
+      <!-- Chưa đăng nhập -->
+      <button class="btn-google-login" id="loginBtn" onclick="openLoginModal()">
+        <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#4285F4" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.7 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#34A853" d="M6.3 14.7l6.6 4.8C14.5 16.3 19 13 24 13c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.7 29.3 4 24 4c-7.6 0-14.2 4.2-17.7 10.7z"/><path fill="#FBBC05" d="M24 44c5.2 0 9.9-2 13.4-5.1l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.6-3.4-11.2-8l-6.6 5.1C9.9 39.8 16.4 44 24 44z"/><path fill="#EA4335" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C41.4 35.4 44 30.1 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+        Đăng nhập
+      </button>
+
+      <!-- Đã đăng nhập -->
+      <div class="user-area hidden" id="userArea">
+        <button class="user-avatar-btn" onclick="toggleDropdown()">
+          <img class="user-avatar-img" id="navAvatar" src="" alt="">
+          <span class="user-display-name" id="navName"></span>
+          <svg class="chevron" width="12" height="12" viewBox="0 0 12 12"><path fill="currentColor" d="M6 8L1 3h10z"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="drop-profile">
+            <img class="drop-avatar" id="dropAvatar" src="" alt="">
+            <div>
+              <div class="drop-name" id="dropName"></div>
+              <div class="drop-email" id="dropEmail"></div>
+            </div>
+          </div>
+          <div class="drop-score-row">
+            <div>
+              <div class="drop-score-num" id="dropScore">0</div>
+              <div class="drop-score-lbl">Thẻ đã thuộc</div>
+            </div>
+            <span style="margin-left:auto;font-size:26px">🏆</span>
+          </div>
+          <button class="drop-btn" onclick="closeDropdown();scrollToFlash()">🃏 Tiếp tục học</button>
+          <button class="drop-btn danger" onclick="signOut()">🚪 Đăng xuất</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section>
+  <div class="hero">
+    <div>
+      <h1>Chinh phục<br><span>Tiếng Trung</span></h1>
+      <p>Hệ thống học tiếng Trung toàn diện — từ vựng, ngữ pháp, hội thoại, flashcard thông minh.</p>
+      <div class="hero-btns">
+        <button class="btn-hero-main" onclick="scrollToFlash()">🚀 Bắt đầu học ngay</button>
+        <button class="btn-hero-sec" onclick="scrollToHSK()">📚 Khám phá HSK</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">6</div><div class="lbl">Cấp HSK</div></div>
+      </div>
+    </div>
+    <div class="hero-cards">
+      <div class="char-card">
+        <div class="char-big">你好</div>
+        <div class="char-pinyin">nǐ hǎo</div>
+        <div class="char-viet">Xin chào</div>
+        <div class="wave-bars"><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="mini-cards-row">
+        <div class="mini-card">
+          <div class="mc-label">HSK Level</div>
+          <div class="hsk-dots">
+            <div class="hsk-dot">1</div><div class="hsk-dot">2</div><div class="hsk-dot">3</div>
+            <div class="hsk-dot inactive">4</div><div class="hsk-dot inactive">5</div><div class="hsk-dot inactive">6</div>
+          </div>
+          <div class="hsk-bar"><div class="hsk-bar-fill"></div></div>
+        </div>
+        <div class="mini-card" style="text-align:center">
+          <div class="mc-label">🔥</div>
+          <div class="streak-num">7</div>
+          <div class="streak-lbl">Ngày liên tiếp</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLASHCARD -->
+<section id="flashcard-section" class="modes-section">
+  <div class="section-title">
+    <div class="section-badge">🃏 Học thông minh</div>
+    <h2>Luyện tập <span>4 kỹ năng</span></h2>
+    <p>Chọn kỹ năng bạn muốn luyện và bắt đầu ngay</p>
+  </div>
+  <div class="modes-grid">
+    <div class="mode-card active" onclick="setMode('read',this)"><div class="mode-icon">👁️</div><h3>Đọc hiểu</h3><p>Nhận biết chữ Hán và nghĩa</p></div>
+    <div class="mode-card" onclick="setMode('speak',this)"><div class="mode-icon">🗣️</div><h3>Luyện nói</h3><p>Phát âm chuẩn theo pinyin</p></div>
+    <div class="mode-card" onclick="setMode('write',this)"><div class="mode-icon">✍️</div><h3>Luyện viết</h3><p>Tập viết chữ Hán trực tiếp</p></div>
+    <div class="mode-card" onclick="setMode('listen',this)"><div class="mode-icon">🎧</div><h3>Luyện nghe</h3><p>Nghe và nhận diện từ đúng</p></div>
+  </div>
+  <div class="flashcard-zone">
+    <div class="fc-header">
+      <div class="fc-title" id="fcTitle">🃏 Luyện đọc — HSK 1</div>
+      <div class="fc-controls">
+        <div class="fc-level-btns">
+          <button class="fc-level-btn active" onclick="setLevel(1,this)">HSK 1</button>
+          <button class="fc-level-btn" onclick="setLevel(2,this)">HSK 2</button>
+          <button class="fc-level-btn" onclick="setLevel(3,this)">HSK 3</button>
+        </div>
+        <span class="fc-progress" id="fcProgress">1 / 10</span>
+      </div>
+    </div>
+    <div class="fc-progress-bar"><div class="fc-progress-fill" id="fcFill" style="width:10%"></div></div>
+    <div id="readMode" class="fc-stage">
+      <div class="fc-card-wrap" onclick="flipCard()">
+        <div class="fc-card-inner" id="fcCardInner">
+          <div class="fc-face fc-front">
+            <div class="fc-char" id="fcChar">你</div>
+            <div class="fc-pinyin-front" id="fcPinyin">nǐ</div>
+            <div class="fc-hint">👆 Nhấn để xem nghĩa</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-char" id="fcCharBack">你</div>
+            <div class="fc-pinyin" id="fcPinyinBack">nǐ</div>
+            <div class="fc-meaning" id="fcMeaning">Bạn / Anh / Chị</div>
+            <div class="fc-example" id="fcExample">你好吗？ (nǐ hǎo ma?)</div>
+            <div class="fc-example-viet" id="fcExampleViet">➤ Bạn có khỏe không?</div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-btn-row">
+        <button class="btn-fc btn-skip" onclick="nextCard()">⏭ Bỏ qua</button>
+        <button class="btn-fc btn-wrong" onclick="markWrong()">❌ Chưa thuộc</button>
+        <button class="btn-fc btn-correct" onclick="markCorrect()">✅ Đã thuộc</button>
+      </div>
+    </div>
+    <div id="speakMode" class="fc-stage hidden">
+      <div class="fc-speak-zone">
+        <div class="speak-card">
+          <div class="speak-char" id="spChar">学习</div>
+          <div class="speak-meaning" id="spMeaning">học tập</div>
+          <div class="speak-pinyin" id="spPinyin">xuéxí</div>
+        </div>
+        <div class="mic-btn" id="micBtn" onclick="toggleMic()">🎤</div>
+        <div class="speak-status" id="spStatus">Nhấn micro để bắt đầu nói</div>
+      </div>
+      <div class="fc-btn-row">
+        <button class="btn-fc btn-skip" onclick="nextCard()">⏭ Bỏ qua</button>
+        <button class="btn-fc btn-correct" onclick="spokenCorrect()">✅ Phát âm đúng</button>
+      </div>
+    </div>
+    <div id="writeMode" class="fc-stage hidden">
+      <div class="fc-write-zone">
+        <div class="fc-write-prompt">
+          <div class="fw-meaning" id="wrMeaning">Cảm ơn</div>
+          <div class="fw-pinyin" id="wrPinyin">xièxie</div>
+          <div class="fw-char" id="wrHint">✏️ Viết chữ Hán vào khung dưới đây</div>
+        </div>
+        <canvas id="writeCanvas" width="340" height="200"></canvas>
+        <div class="fc-write-btns">
+          <button class="btn-fc btn-clear" onclick="clearCanvas()">🗑 Xóa</button>
+          <button class="btn-fc btn-check" onclick="checkWrite()">✅ Kiểm tra</button>
+          <button class="btn-fc btn-skip" onclick="showWriteAnswer()">👁 Xem đáp án</button>
+        </div>
+      </div>
+      <div class="fc-btn-row"><button class="btn-fc btn-skip" onclick="nextCard()">⏭ Bỏ qua</button></div>
+    </div>
+    <div id="listenMode" class="fc-stage hidden">
+      <div class="fc-listen-zone">
+        <div class="listen-card">
+          <div class="listen-question">🎧 Nghe và chọn từ đúng</div>
+          <div class="listen-icon" onclick="playAudio()">🔊</div>
+          <button class="listen-btn" onclick="playAudio()">▶ Nghe lại</button>
+        </div>
+        <div class="listen-options" id="listenOptions"></div>
+      </div>
+      <div class="fc-btn-row"><button class="btn-fc btn-skip" onclick="nextCard()">⏭ Câu tiếp theo</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- HSK -->
+<section id="hsk-section" class="hsk-section">
+  <div class="section-title">
+    <div class="section-badge">📊 Lộ trình học</div>
+    <h2>Chương trình <span>HSK</span></h2>
+    <p>Học theo chuẩn quốc tế từ cơ bản đến nâng cao</p>
+  </div>
+  <div class="hsk-levels">
+    <div class="hsk-level-card active" onclick="setHSKCard(1,this)"><div class="hsk-num">1</div><div class="hsk-words">162 từ</div><div style="font-size:12px;color:var(--accent2);font-weight:600">Cơ bản</div><div class="hsk-progress-mini"><div class="hsk-progress-mini-fill" style="width:80%"></div></div></div>
+    <div class="hsk-level-card" onclick="setHSKCard(2,this)"><div class="hsk-num">2</div><div class="hsk-words">300 từ</div><div style="font-size:12px;color:var(--primary);font-weight:600">Sơ cấp</div><div class="hsk-progress-mini"><div class="hsk-progress-mini-fill" style="width:45%"></div></div></div>
+    <div class="hsk-level-card" onclick="setHSKCard(3,this)"><div class="hsk-num">3</div><div class="hsk-words">600 từ</div><div style="font-size:12px;color:var(--accent);font-weight:600">Trung cấp</div><div class="hsk-progress-mini"><div class="hsk-progress-mini-fill" style="width:20%"></div></div></div>
+    <div class="hsk-level-card" onclick="setHSKCard(4,this)"><div class="hsk-num">4</div><div class="hsk-words">1,200 từ</div><div style="font-size:12px;color:var(--muted);font-weight:600">Khá</div><div class="hsk-progress-mini"><div class="hsk-progress-mini-fill" style="width:5%"></div></div></div>
+    <div class="hsk-level-card" onclick="setHSKCard(5,this)"><div class="hsk-num">5</div><div class="hsk-words">2,500 từ</div><div style="font-size:12px;color:var(--muted);font-weight:600">Cao cấp</div><div class="hsk-progress-mini"><div class="hsk-progress-mini-fill" style="width:0%"></div></div></div>
+    <div class="hsk-level-card" onclick="setHSKCard(6,this)"><div class="hsk-num">6</div><div class="hsk-words">5,000 từ</div><div style="font-size:12px;color:var(--muted);font-weight:600">Thành thạo</div><div class="hsk-progress-mini"><div class="hsk-progress-mini-fill" style="width:0%"></div></div></div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-inner">
+    <div class="section-title">
+      <div class="section-badge">✨ Tính năng</div>
+      <h2>Tất cả những gì bạn cần <span>thành thạo tiếng Trung</span></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon fi-blue">📖</div><h3>Flashcard thông minh</h3><p>Hệ thống lặp lại ngắt quãng (SRS) tối ưu hoá việc ghi nhớ từ vựng lâu dài.</p></div>
+      <div class="feature-card"><div class="feature-icon fi-purple">🎧</div><h3>Luyện nghe chuẩn</h3><p>Audio phát âm chuẩn bởi người bản ngữ, hỗ trợ cả 4 thanh điệu tiếng Trung.</p></div>
+      <div class="feature-card"><div class="feature-icon fi-green">✍️</div><h3>Luyện viết chữ Hán</h3><p>Bảng vẽ tương tác giúp bạn luyện viết đúng nét và đúng thứ tự bút pháp.</p></div>
+      <div class="feature-card"><div class="feature-icon fi-amber">🗣️</div><h3>Luyện phát âm</h3><p>Công nghệ nhận diện giọng nói đánh giá phát âm và thanh điệu của bạn.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">Doan Huy 段辉</div>
+  <p style="margin-top:8px">Made in Việt Nam 🇻🇳</p>
+</footer>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginOverlay" onclick="handleOverlayClick(event)">
+  <div class="login-modal">
+    <button class="modal-close" onclick="closeLoginModal()">✕</button>
+    <div class="modal-logo">汉</div>
+    <div class="modal-title">Đăng nhập</div>
+    <div class="modal-sub">Đăng nhập để lưu tiến độ học tập<br>và xem kết quả của riêng bạn.</div>
+    <button class="btn-google-big" onclick="triggerGoogleSignIn()">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.7 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#34A853" d="M6.3 14.7l6.6 4.8C14.5 16.3 19 13 24 13c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34.1 6.7 29.3 4 24 4c-7.6 0-14.2 4.2-17.7 10.7z"/><path fill="#FBBC05" d="M24 44c5.2 0 9.9-2 13.4-5.1l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.6-3.4-11.2-8l-6.6 5.1C9.9 39.8 16.4 44 24 44z"/><path fill="#EA4335" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C41.4 35.4 44 30.1 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+      Tiếp tục với Google
+    </button>
+    <!-- Google One Tap container (ẩn, GSI tự xử lý) -->
+    <div id="g_id_onload"
+         data-client_id="1049498478862-ktdtjbldmqkl1cvla7gd78aue8ee2qu9.apps.googleusercontent.com"
+         data-callback="handleGoogleCredential"
+         data-auto_prompt="false">
+    </div>
+    <p class="modal-note">Tiến độ học được lưu riêng theo tài khoản Google của bạn.<br>Chúng tôi không lưu mật khẩu hay thông tin nhạy cảm.</p>
+  </div>
+</div>
+
+<script>
+const _0x418e65=_0x2d27;(function(_0x105e97,_0x40a622){const _0x34d363=_0x2d27,_0x1b7b39=_0x105e97();while(!![]){try{const _0x3a9fc9=parseInt(_0x34d363(0x1f4))/0x1*(-parseInt(_0x34d363(0x164))/0x2)+parseInt(_0x34d363(0x153))/0x3*(-parseInt(_0x34d363(0xfd))/0x4)+-parseInt(_0x34d363(0x1e3))/0x5*(parseInt(_0x34d363(0x2da))/0x6)+parseInt(_0x34d363(0xed))/0x7*(-parseInt(_0x34d363(0x91))/0x8)+parseInt(_0x34d363(0x1fa))/0x9+-parseInt(_0x34d363(0xd5))/0xa*(-parseInt(_0x34d363(0x115))/0xb)+-parseInt(_0x34d363(0x15e))/0xc*(-parseInt(_0x34d363(0x257))/0xd);if(_0x3a9fc9===_0x40a622)break;else _0x1b7b39['push'](_0x1b7b39['shift']());}catch(_0x22f97a){_0x1b7b39['push'](_0x1b7b39['shift']());}}}(_0x2a95,0x99368));function _0x2a95(){const _0x547be6=['getElementById','Cảm\x20ơn','AIzaSyDut6XEJP30TyQevU6F5YbSvYs61uf0O9E','你想买几口？\x20(Nǐ\x20xiǎng\x20mǎi\x20jǐ\x20kǒu?)','writeMode','Zhōngguó','Nghe','张老师是我的老师。\x20(Zhāng\x20lǎoshī\x20shì\x20wǒ\x20de\x20lǎoshī.)','src','Số\x204','nà\x20(nàr)','Buổi\x20trưa\x20bạn\x20ăn\x20gì?','Số\x200','Ý\x20nghĩa\x20/\x20Thú\x20vị','Tôi\x20thích\x20uống\x20nước\x20ép\x20trái\x20cây.','Không\x20….(sở\x20hữu,lí\x20do)\x20….','fcPinyinBack','✏️\x20Viết\x20chữ\x20Hán:\x20','我还没到家。\x20(Wǒ\x20hái\x20méi\x20dàojiā.)','你看见了没？\x20(Nǐ\x20kànjiàn\x20le\x20méi?)','duō','xièxiè','我\x20是….\x20(Wǒ\x20shì….)','Tôi\x20lúc\x20bé\x20rất\x20thích\x20bạn.','✍️\x20Luyện\x20viết','</span>','Con\x20cái','我打算五月去旅行。\x20(Wǒ\x20dǎsuàn\x20wǔ\x20yuè\x20qù\x20lǚxíng.)','yǒu','rate','spMeaning','我做了。\x20(Wǒ\x20zuò\x20le.)','removeItem','20cSklpA','Bạn\x20có\x20thể\x20đến\x20cửa\x20hàng\x20nội\x20thất\x20mua\x20chiếc\x20ghế\x20mà\x20bạn\x20yêu\x20thích.','hěn','zhù','fēijī','className','Không\x20có\x20thời\x20gian.','dōu','拜拜，再见。\x20(Bàibài,\x20zàijiàn.)','xuésheng','xiē','Du\x20lịch\x20tới\x20Trung\x20Quốc\x20nhất\x20định\x20phải\x20đến\x20Bắc\x20Kinh.','Tốt\x20/\x20Khỏe','谢谢你的帮助。\x20(Xièxienǐ\x20de\x20bāngzhù.)','red','Bạn\x20tốt.','我想去玩。\x20(Wǒ\x20xiǎng\x20qù\x20wán.)','628415tBVDEA','Chào\x20tiểu\x20thư.','我很爱他。\x20(Wǒ\x20hěn\x20ài\x20tā.)','shíjiān','fcChar','shì','8388495SJtFgd','fcExampleViet','Viết','今天你去哪？\x20(Jīntiān\x20nǐ\x20qù\x20nǎ?)','Tôi\x20có\x205\x20người\x20bạn\x20tốt.','我喜欢学习。','Bạn\x20gọi\x20tôi\x20có\x20việc\x20gì\x20đấy?','Tôi\x20thích\x20học\x20tập.','🔄\x20Luyện\x20thêm\x20nhé!','shuǐguǒ','Bạn\x20đừng\x20nói\x20tầm\x20bậy\x20tầm\x20bạ\x20nữa.','Con\x20gái','Hôm\x20nay\x20cậu\x20đi\x20đâu\x20đấy?','Chúng\x20tôi','Tôi\x20nhất\x20định\x20sẽ\x20làm.','Lúc\x20nào','hoc-tieng-trung-be68a','xiānsheng','🃏\x20Luyện\x20đọc','这本书在那(那儿)\x20边。\x20(Zhè\x20běn\x20shū\x20zài\x20nà\x20(nàr)\x20biān.)','Nhà\x20mình\x20có\x201\x20chú\x20chó.','To\x20/\x20Lớn','Tôi\x20không\x20sao\x20cả,\x20đừng\x20ngại.','Uống','Hôm\x20nay\x20ăn\x20hàng\x20cơm\x20nào?','Máy\x20vi\x20tính','jīntiān','credential','jīngyàn','readMode','sort','font','spPinyin','zàijiàn','Bạn\x20muốn\x20xem\x20gì?','Đổ\x20mưa','这几天天气\x20很好。\x20(Zhè\x20jǐ\x20tiān\x20tiānqi\x20hěn\x20hǎo.)','Cô\x20ấy\x20rất\x20xinh.','Tôi\x20muốn\x20đi\x20xem\x20phim.','HSK\x20','爸爸,我很爱你。\x20(bàba,wǒ\x20hěn\x20ài\x20nǐ.)','yīfu','🔊\x20Đang\x20phát:\x20','nǚér','Đọc','你想来中国留学。\x20(Nǐ\x20xiǎnglái\x20Zhōngguó\x20liúxué.)','Tôi\x20đã\x20làm\x20xong\x20việc\x20của\x20mình\x20rồi.','Cốc\x20uống','lang','strokeStyle','dropScore','Bắc\x20Kinh','mean','你可以到家具店买你喜欢的椅子。\x20(Nǐ\x20kěyǐ\x20dào\x20jiājù\x20diàn\x20mǎi\x20nǐ\x20xǐhuān\x20de\x20yǐzi.)','Việt\x20Nam\x20và\x20Trung\x20Quốc\x20là\x20láng\x20giềng.','🔥\x20Firebase\x20đã\x20kết\x20nối\x20thành\x20công!','Tôi\x20có\x20thể\x20làm\x20được.','Hiện\x20tại','nián','lěng','Con\x20trai\x20bạn\x20ở\x20bên\x20trên.','Đây\x20là\x20sách\x20của\x20cậu.','我家的第五个成员是小猫咪。\x20(Wǒjiā\x20de\x20dì\x20wǔ\x20gè\x20chéngyuán\x20shì\x20xiǎo\x20māomī.)','Nhà\x20bạn\x20có\x20mấy\x20người?','她很美。','你认为汉语\x20难吗?\x20(Nǐ\x20rènwéi\x20Hànyǔ\x20nán\x20ma?)','我喜欢这件衣服。\x20(Wǒ\x20xǐhuān\x20zhè\x20jiàn\x20yīfu.)','duìbuqǐ','fàngguǎn','Đây\x20là\x20cửa\x20hàng\x20của\x20chị\x20bạn\x20hả?','Bạn\x20làm\x20mấy\x20món\x20vậy?','没关系','shénme','green','xué','Tốt,\x20Ok','你好吗？(nǐ\x20hǎo\x20ma?)','✅\x20Tuyệt\x20vời!\x20Đã\x20thuộc\x20rồi!','gǒu','clearRect','Tháng\x204\x20này\x20tôi\x20định\x20đi\x20Hà\x20Nội.','Ai\x20mà\x20chả\x20yêu\x20tiền\x20chứ?','left','Bạn\x20có\x20đi\x20làm\x20không?','❌\x20Đăng\x20nhập\x20thất\x20bại','sān','这(这儿)','zh-CN','Tôi\x20là\x20cục\x20cưng\x20đáng\x20yêu.','Mời\x20ngồi.','你想吃什么？我想吃米饭\x20。\x20(Nǐ\x20xiǎng\x20chī\x20shénme?\x20Wǒ\x20xiǎng\x20chī\x20mǐfàn\x20.)','我的爱好是唱歌。\x20(Wǒ\x20de\x20àihào\x20shì\x20chànggē.)','openid\x20profile\x20email','764387vLcjcQ','filter','userArea','beginPath','mǐfàn','(Người/cái)\x20Thứ\x202\x20là……','2\x20việc\x20này\x20không\x20có\x20liên\x20quan\x20gì\x20hết.','那(那儿)','你的阅读课怎么样？\x20(Nǐ\x20de\x20yuè\x20dú\x20kè\x20zěnme\x20yàng?)','míngtiān','Tôi\x20thích\x20âm\x20nhạc.','top','Bây\x20giờ\x205\x20giờ\x2030\x20phút.','hsk-section','我能做得到的。\x20(Wǒ\x20néng\x20zuò\x20dédào\x20de.)','Nói\x20chuyện','Bạn\x20sao\x20đó?','Bạn\x20có\x20khỏe\x20không?','Bạn\x20muốn\x20ăn\x20gì?','火车站','Trường\x20học','Món\x20(ăn)','Hôm\x20nay','怎么样治疗癌症呢？\x20(Zěnmeyàng\x20zhìliáo\x20áizhèng\x20ne?)','G-7NCSDZYNYP','bú\x20kèqi','recording','Không\x20liên\x20quan','getItem','lái','target','kànjiàn','小姐好。\x20(Xiǎojiěhǎo.)','🎧\x20Luyện\x20nghe','今天是2020年2月2日\x20(Jīntiān\x20shì\x202020\x20nián\x202\x20yuè\x202\x20rì)','active','对不起，我知道我的错了。\x20(Duìbuqǐ,\x20wǒ\x20zhīdào\x20wǒ\x20de\x20cuòle.)','Tôi\x20định\x20tháng\x205\x20này\x20đi\x20du\x20lịch.','Thích','touchmove','https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js','wrMeaning','Nhà\x20bạn\x20ở\x20đâu?','qǐng','我喜欢音乐。','Môi\x20trường\x20tốt.','Đẹp\x20/\x20Xinh\x20đẹp','不管是白天还是黑夜我都很想你。\x20(Bùguǎn\x20shì\x20báitiān\x20háishì\x20hēiyè\x20wǒ\x20dōu\x20hěn\x20xiǎng\x20nǐ.)','你不用担心\x20(Nǐ\x20bú\x20yòng\x20dānxīn.)','Ngủ','Bạn\x20bè','我喜欢唱歌。\x20(Wǒ\x20xǐhuan\x20chànggē.)','现在七点。\x20(Xiànzài\x20qī\x20diǎn.)','listenMode','Vui\x20vẻ,\x20hào\x20hứng','chá','Bạn\x20mua\x20nhiều\x20quá\x20rồi.','Ngài\x20Trương,\x20hoan\x20nghênh\x20ngài\x20tới\x20thăm.','lineCap','Tôi\x20muốn\x20đi\x20chơi.','Văn\x20hóa','néng','érzi','Cô\x20ấy\x20thật\x20xinh\x20đẹp.','Sách','round','Cái\x20ghế','Hôm\x20nay\x20là\x20ngày\x202\x20tháng\x202\x20năm\x202020.','contains','喝水。','píngguǒ','Đồ\x20vật','zěnmeyàng','Chưa','非常谢谢！','Tôi\x20thích\x20hát.','zhōngwǔ','Năm','Giáo\x20viên','Cơ\x20hội\x20tốt.','toast\x20show','split','Học\x20sinh','Thời\x20gian','Quý\x20ông','我在国外工作五\x20年了。\x20(Wǒ\x20zài\x20guówài\x20gōngzuò\x20wǔ\x20niánle.)','Muốn','load','Noel\x20tặng\x20táo.','Buổi\x20trưa','Trị\x20ung\x20thư\x20như\x20thế\x20nào\x20đây?','#2A1506','textBaseline','chūzūchē','speak','pathname','Số\x2010','fcExample','lineTo','Tôi\x20ngồi\x20ở\x20trong\x20nhà.','Bố\x20ơi,\x20con\x20rất\x20yêu\x20bố.','Học\x20tập','你家有电视\x20吗？\x20(Nǐ\x20jiā\x20yǒu\x20diànshì\x20ma?)','Cái\x20bàn\x20này\x20của\x20hãng/\x20nhãn\x20hàng\x20nào\x20thế?','Mấy\x20hôm\x20nay\x20thời\x20tiết\x20rất\x20đẹp.','140px\x20\x22Noto\x20Serif\x20SC\x22,serif','listenOptions','Cuốn\x20sách\x20này\x20rất\x20phù\x20hợp\x20với\x20con\x20bạn.','fcTitle','Rất\x20vui\x20được\x20gặp\x20bạn.','Tôi\x20đến\x20rồi\x20đây.','Trung\x20Quốc\x20(tên\x20tắt)','Người\x20Trung\x20Quốc\x20rất\x20thích\x20số\x206.','这是我的儿子。\x20(Zhè\x20shì\x20wǒ\x20de\x20érzi\x20.)','我想去看电影。\x20(Wǒ\x20xiǎng\x20qù\x20kàn\x20diànyǐng.)','clientY','你想买多少\x20呢·？\x20(Nǐ\x20xiǎng\x20mǎi\x20duōshao\x20ne?)','Mình\x20là\x20bảo\x20bối\x20của\x20bạn.','māo','mǎi','Buổi\x20chiều\x20đi\x20đâu\x20chơi\x20không?','https://accounts.google.com/o/oauth2/v2/auth?','toast','.listen-option','rènshi','māma','qiánmiàn','height','remove','picture','Tôi\x20thích\x20đi\x20ngủ.','42666SdjEaf','wrPinyin','Xem','Uống\x20nước.','七上八下\x20(Qīshàngbāxià)','Công\x20việc','hǎo','jīhuì','Kinh\x20nghiệm','péngyou','Mời','这个桌子是什么品牌的？\x20(Zhège\x20zhuōzi\x20shì\x20shénme\x20pǐnpái\x20de?)','spChar','Cô\x20ấy\x20/\x20Bà\x20ấy','shuǐ','你好！(nǐ\x20hǎo!)','rén','Anh\x20ấy\x20/\x20Ông\x20ấy','等我一下，我给老张打个电话吧。\x20(Děng\x20wǒ\x20yíxià,\x20wǒ\x20gěi\x20Lǎozhāng\x20dǎ\x20gè\x20diànhuà\x20ba.)','什么意思？','chī','flipped','replace','请坐。\x20(Qǐngzuò.)','nǎ\x20(nǎr)','Bệnh\x20viện','Bây\x20giờ\x207\x20giờ.','mouseleave','Cái\x20gì\x20đó,\x20vật\x20gì\x20đó,\x20việc\x20gì\x20đó\x20của\x20ai\x20đó,\x20cái\x20gi\x20đó…..','lǎoshī','.fc-level-btn','越南和中国是邻居。\x20(Yuènán\x20hé\x20Zhōngguó\x20shì\x20línjū.)','Thứ\x201\x20là\x20…','tīng','Cơ\x20hội','你做几菜餐呢？\x20(Nǐ\x20zuò\x20jǐ\x20cài\x20cān\x20ne?)','.hsk-level-card','Không','score','Anh\x20ta\x20là\x20bạn\x20đồng\x20niên\x20của\x20tôi.','中午你吃啥？\x20(Zhōngwǔnǐ\x20chī\x20shǎ?)','yìsi','diànshì','你想看什么呢？\x20(Nǐ\x20xiǎng\x20kàn\x20shénme\x20ne?)','Dạo\x20này\x20công\x20việc\x20của\x20bạn\x20thế\x20nào\x20rồi?','星巴克的杯子\x20超级可爱。\x20(Xīngbākè\x20de\x20bēizi\x20chāojí\x20kě’ài.)','dropAvatar','addEventListener','Ở\x20đâu','Cậu\x20nhìn\x20thấy\x20gì\x20chưa?','Thứ\x20….','Số\x208','Nhà','Chó','appendChild','Phía\x20dưới','touches','mouseup','我喝矿泉水。\x20(Wǒ\x20hē\x20kuàngquán\x20shuǐ\x20.)','Bây\x20giờ\x20mấy\x20giờ\x20rồi?','wénhuà','遇到寒冷的天气。\x20(Yù\x20dào\x20hánlěng\x20de\x20tiānqì.)','diànnǎo','fcCardInner','Hoa\x20quả','Lần\x20du\x20lịch\x20này\x20chúng\x20mình\x20thuê\x20xe\x20đi.','<span\x20class=\x22lo-char\x22>','shíhou','undefined','dropEmail','他没入水中。\x20(Tā\x20mòrù\x20shuǐzhōng.)','fillStyle','Xe\x20thuê','Đồng','toggle','Đừng\x20khách\x20khí,\x20đừng\x20ngại','Đây\x20là\x20con\x20trai\x20của\x20tôi.','xiàwǔ','speechSynthesis','Xin\x20chào!','Số\x203','昨天我才回来。\x20(Zuótiān\x20wǒ\x20cái\x20huílái.)','fcPinyin','明天去看电影吧。\x20(Míngtiān\u00a0\x20qù\x20kàn\x20diànyǐng\x20ba.)','shàngwǔ','lineJoin','suì','Người','Số\x207','listen-option','Nhiều,\x20thừa','nǔlì','Thầy\x20Trương\x20là\x20thầy\x20giáo\x20của\x20tôi.','show','Alo','huì','Bạn\x20/\x20Anh\x20/\x20Chị','Tôi\x20yêu\x20bạn.','Máy\x20bay','9603928yjKBrD','我家有一只狗。\x20(Wǒjiā\x20yǒu\x20yì\x20zhī\x20gǒu.)','Học\x20sinh\x20cần\x20tập\x20trung\x20học\x20tập.','Thế\x20nào,\x20làm\x20sao','innerHTML','rgba(139,26,26,0.12)','⚠️\x20Trình\x20duyệt\x20chưa\x20hỗ\x20trợ\x20TTS','qián','textContent','Yêu\x20thích','pinyin','好机会。','Chúng\x20tôi\x20là\x20sinh\x20viên\x20trường\x20Đại\x20học\x20Quốc\x20Gia.','学生要好好学习。\x20(Xuéshēng\x20yào\x20hǎohāo\x20xuéxí.)','xuéxí','Tuổi','Phía\x20trước\x20là\x20nhà\x20của\x20tôi.','一来中国旅行一定要来北京\x20。\x20(Yì\x20lái\x20Zhōngguó\x20lǚxíng\x20yídìng\x20yào\x20lái\x20Běijīng.)','我的书。\x20(Wǒ\x20de\x20shū.)','Cám\x20ơn\x20bạn\x20đã\x20giúp\x20tôi.','Mai\x20đi\x20xem\x20phim\x20đi.','email','Đột\x20nhiên\x20mưa\x20rồi.','这双鞋有点大\x20。\x20(Zhè\x20shuāng\x20xié\x20yǒudiǎn\x20dà.)','Ngày\x20mai','Đôi\x20giày\x20này\x20hơi\x20to\x20chút.','Bây\x20giờ\x20mấy\x20giờ\x20rồi?\x209\x20giờ.','querySelectorAll','Anh\x20ấy\x20lặn\x20xuống\x20làn\x20nước.','Běijīng','Cảm\x20ơn\x20rất\x20nhiều!','👏\x20Phát\x20âm\x20chuẩn!','wrong','⚠️\x20Chưa\x20cấu\x20hình\x20Google\x20Client\x20ID!','他是谁？\x20(Tā\x20shì\x20shéi?)','dōngxi','tóngxué','Làm\x20việc','妈妈是我最爱的人。\x20(Māma\x20shì\x20wǒ\x20zuì\x20ài\x20de\x20rén.)','我月五个好朋友。\x20(Wǒ\x20yǒu\x20wǔ\x20gè\x20hǎo\x20péngyǒu.)','Mét','navName','shǎo','Mua','Bài\x20tập\x20về\x20nhà\x20của\x20bạn\x20rất\x20tốt.','Đây\x20là\x20bệnh\x20viện….','fillText','Bạn\x20muốn\x20mua\x20mấy\x20cái?','Gần\x20đây\x20có\x20ga\x20tàu\x20hỏa\x20không?','Bạn\x20có\x20thích\x20tôi\x20không?','Nhìn\x20thấy','Xin\x20lỗi,\x20mình\x20biết\x20lỗi\x20của\x20mình\x20rồi.','Ít,\x20thiếu','Quần\x20áo','他是我的童年。\x20(Tā\x20shì\x20wǒ\x20de\x20tóng\x20nián.)','Tôi\x20quá\x20đáng\x20yêu\x20đi\x20mà.','这个零字很难写。\x20(Zhège\x20líng\x20zì\x20hěn\x20nán\x20xiě.)','lineWidth','Đây\x20là\x20chuyện\x20gì\x20thế\x20này?','splice','1049498478862-ktdtjbldmqkl1cvla7gd78aue8ee2qu9.apps.googleusercontent.com','你呢？\x20(Nǐ\x20ne?)','Bao\x20nhiêu','random','Bến\x20tàu\x20hỏa','preventDefault','read','Bạn\x20học','20hPpzAq','Cửa\x20hàng\x20ăn','Tên','Số\x206','\x20—\x20HSK\x20','现在几点了？9点了。\x20(Xiànzài\x20jǐ\x20diǎn\x20le\x20?\x20Jiǔ\x20diǎn\x20le.)','现在几点了？\x20(Xiànzàijǐ\x20diǎnle?)','我没事，不客气\x20。\x20(Wǒ\x20méishì,bú\x20kèqi\x20.)','我喜欢这台电脑\x20。\x20(Wǒ\x20xǐhuān\x20zhè\x20tái\x20diànnǎo\x20.)','shuōhuà','803684496324','Quay\x20lại,\x20trở\x20về','Tôi\x20không\x20quen\x20anh\x20ấy.','dropName','他是我的男朋友。\x20(Tā\x20shì\x20wǒ\x20de\x20nán\x20péngyou.)','Cửa\x20hàng/\x20tiệm','1:803684496324:web:bc68c035b5046943b9aa91','Phút','这个三\x20钱。\x20(Zhège\x20sān\x20kuài\x20qián.)','Đến','width','xiě','add','Bạn\x20tên\x20là\x20gì?','7kwFjmw','líng','bàba','我一定会做的。\x20(Wǒ\x20yīdìng\x20huì\x20zuò\x20de.)','select_account','第二是…..\x20(Dì\x20èr\x20shì…..)','touchend','accounts','🔴\x20Đang\x20ghi\x20âm...\x20Nói\x20to\x20và\x20rõ!','她很漂亮\x20。\x20(Tā\x20hěn\x20piàoliang.)','Tôi\x20làm\x20rồi.','你买太多\x20了。\x20(Nǐ\x20mǎi\x20tài\x20duō\x20le.)','shéi','yīyuàn','yǐzi','Nước','152ZPjgKV','createElement','loginBtn','shuìjiào','origin','你写的汉字很好。\x20(Nǐ\x20xiěde\x20Hànzì\x20hěn\x20hǎo.)','👋\x20Xin\x20chào,\x20','Bạn','xiǎo','Buổi\x20chiều','我太可爱了。\x20(Wǒ\x20tài\x20kě’àile.)','你叫我干嘛呀？\x20(Nǐ\x20jiào\x20wǒ\x20gàn\x20mǎ\x20yā?)','char','classList','Đây\x20là\x20bạn\x20học\x20cũ\x20của\x20tôi.','Tháng','gōngzuò','Những\x20món\x20đồ\x20này\x20do\x20ai\x20mua\x20đó?','writeCanvas','我想乘飞机\x20。\x20(Wǒ\x20xiǎng\x20chéng\x20fēijī.)','Phim\x20điện\x20ảnh','我想请你去吃饭。\x20(Wǒ\x20xiǎng\x20qǐng\x20nǐ\x20qù\x20chīfàn.)','努力学习。','piàoliang','1459216rVEWNs','Bạn\x20đem\x20đến\x20đồ\x20(vật)\x20gì\x20vậy?','kuài','学习汉语。','Tôi\x20ở\x20nước\x20ngoài\x20công\x20tác\x205\x20năm\x20rồi.','touchstart','中国人很喜欢六\x20字。\x20(Zhōngguó\x20rén\x20hěn\x20xǐhuān\x20liù\x20zì.)','getFirestore','Rất\x20to.','Buổi\x20sáng\x20đi\x20làm\x20việc.','\x20/\x20','isNotDisplayed','不客气','谁不爱钱呢？\x20(Shéi\x20bú\x20ài\x20qián\x20ne?)','kàn','Gọi\x20điện\x20thoại','Alo,\x20xin\x20hỏi\x20có\x20phải\x20là\x20thầy\x20Vương\x20không?','Tôi\x20rất\x20thích\x20cỗ/bộ\x20máy\x20tính\x20này.','exV','最近你工作\x20怎么样？\x20(Zuìjìn\x20nǐ\x20gōngzuò\x20zěnme\x20yàng?)','floor','今天天气很\x20冷。\x20(Jīntiān\x20tiānqì\x20hěn\x20lěng.)','zuótiān','❌\x20Sai\x20rồi!','xià\x20yǔ','speakMode','哪(哪儿)','Có\x20nghĩa\x20là\x20gì?','💪\x20Cố\x20lên!\x20Ôn\x20lại\x20nhé.','Sao\x20vậy,\x20như\x20thế\x20nào','Văn\x20hóa\x20Trung\x20Quốc.','Nhà\x20tôi\x20có\x204\x20người.','Sở\x20thích\x20của\x20tôi\x20là\x20ca\x20hát.','这是我的学生。\x20(Zhè\x20shì\x20wǒ\x20de\x20xuésheng.)','喂，请问王老师在吗？\x20(Wèi,\x20qǐngwèn\x20Wáng\x20lǎoshī\x20zài\x20ma?)','Không\x20kể\x20ngày\x20hay\x20đêm,\x20mình\x20đều\x20rất\x20nhớ\x20cậu.','✏️\x20Hãy\x20viết\x20chữ\x20trước!','bēizi','Ngồi','length','突然下雨了！\x20(Tūrán\x20xià\x20yǔle!)','10\x20đồng\x201\x20phần.','Thành\x20viên\x20thứ\x205\x20của\x20gia\x20đình\x20tôi\x20chính\x20là\x20chú\x20mèo.','then','你家在哪(哪儿)\x20呀？\x20(Nǐ\x20jiā\x20zài\x20nǎ\x20(nǎr)\x20ya?)','Xin\x20lỗi','今年的春运很多人回\x20家。\x20(Jīn\x20nían\x20de\x20chūnyùn\x20hěn\x20duō\x20rén\x20huí\x20jiā.)','middle','Bạn\x20viết\x20chữ\x20Hán\x20rất\x20đẹp.','wǒmen','Bạn\x20muốn\x20mua\x20bao\x20nhiêu\x20?','有我在。\x20(Yǒu\x20wǒ\x20zài.)','打电话','附近有火车站吗？\x20(Fùjìn\x20yǒu\x20huǒchēzhàn\x20ma?)','dhsok_session','怎么样','cài','Học','hoc-tieng-trung-be68a.firebasestorage.app','Xuân\x20vận\x20năm\x20nay\x20rất\x20nhiều\x20người\x20trở\x20về\x20nhà.','Mấy','Lạnh','97959VhSFCc','Anh','你今年多少岁\x20？\x20(Nǐ\x20jīnnián\x20duōshǎosuì?)','zuò','stringify','shū','Tôi\x20thích\x20có\x20con\x20gái.','我想吃饭。','dhsok_','Bạn\x20đi\x20đâu\x20đấy?','micBtn','516lLkiNq','xǐhuān','data','Bạn\x20không\x20cần\x20lo\x20lắng.','Tôi\x20ở\x20bên\x20ngoài,\x20bạn\x20mở\x20cửa\x20đi.','我不认识她。\x20(Wǒ\x20bú\x20rènshi\x20tā.)','2odCcXU','Yêu','Tôi\x20sống\x20ở\x20kí\x20túc\x20xá.','我喜欢有女儿。\x20(Wǒ\x20xǐhuān\x20yǒu\x20nǚér.)','今天上午九点上课。\x20(Jīntiān\x20shàngwǔ\x20jiǔ\x20diǎn\x20shàngkè.)','zài','jiǔ','Thời\x20tiết\x20hôm\x20nay\x20rất\x20lạnh.','Tôi\x20muốn\x20ăn\x20cơm.','some','第一是….\x20(Dì\x20yīshì…)','Ở\x20đây','xiǎojiě','Tiết\x20học\x20đọc\x20của\x20cậu\x20như\x20thế\x20nào?','你别说废话。\x20(Nǐ\x20bié\x20shuō\x20fèihuà.)','To,\x20lớn','Quý\x20cô','forEach','Cốc\x20của\x20starbuck\x20đáng\x20yêu\x20ghê.','mousemove','Anh\x20ấy\x20là\x20bạn\x20trai\x20của\x20tôi.','Cô\x20ấy\x20rất\x20đẹp.','⏳\x20Đang\x20phân\x20tích...','Một\x20ít/\x20vài','clientX','Tôi','moveTo','běn','Đợi\x20mình\x20một\x20chút,\x20mình\x20gọi\x20điện\x20cho\x20thầy\x20Trương\x20đã.','Người\x20này\x20là\x20ai\x20đó?','我是你的小宝贝。\x20(Wǒ\x20shì\x20nǐ\x20de\x20xiǎo\x20bǎobèi.)','Gặp\x20phải\x20thời\x20tiết\x20giá\x20lạnh.','我做好我的事了。\x20(Wǒ\x20zuòhǎo\x20wǒ\x20de\x20shìle.)','你工作吗？','Thời\x20tiết','你是谁？\x20(Nǐ\x20shì\x20shéi?)','Ti\x20vi,\x20vô\x20tuyến','Tại','token','stroke','xuéxiào','fcCharBack','</span><span\x20class=\x22lo-mean\x22>','他很高。','Số\x209','张先生，欢迎光临。\x20(Zhāng\x20xiānsheng,\x20huānyíng\x20guānglín.)','wèi','Đây\x20là\x20học\x20sinh\x20của\x20tôi.','open','我住在宿舍。\x20(Wǒ\x20zhùzài\x20sùshè.)','今天去哪个饭馆呢？\x20(Jīntiān\x20qù\x20nǎge\x20fàngguǎn\x20ne?)','Môi\x20trường','钱包在包子下面。\x20(Qiánbāo\x20zài\x20bāozi\x20xiàmiàn.)','我家有四口人。\x20(Wǒ\x20jiā\x20yǒu\x20sì\x20kǒu\x20rén.)','xià','shàng','我小时候很喜欢你。\x20(Wǒ\x20xiǎo\x20shíhou\x20hěn\x20xǐhuān\x20nǐ.)','xièxie','fcFill','Trà','三\x20点了你还干嘛呀？\x20(sān\x20diǎnle\x20nǐ\x20hái\x20gàn\x20mǎ\x20ya?)','wrHint','Tôi\x20muốn\x20mời\x20bạn\x20đi\x20ăn.','getBoundingClientRect','xiànzài','pop','没有时间。','你的作业很好。\x20(Nǐ\x20de\x20zuòyè\x20hěn\x20hǎo.)','Chữ\x20số\x200\x20này\x20thật\x20khó\x20viết.','parse','今天星期二。\x20(Jīntiān\x20xīngqī\x20èr.)','setItem','Bạn\x20thích\x20loại\x20hoa\x20quả\x20nào?','Tôi\x20muốn\x20đi\x20máy\x20bay.','onclick','loginOverlay','🎉\x20Chính\x20xác!','这些东西是谁买的？\x20(Zhè\x20xiēdōngxī\x20shì\x20shéi\x20mǎi\x20de?)','hidden','下午去玩吗？\x20(Xiàwǔ\x20qù\x20wán\x20ma?)','👋\x20Đã\x20đăng\x20xuất','width=500,height=600','好环境。','Bố,\x20ba','Tôi\x20là\x20…','flashcard-section','spStatus','style','对不起','✅\x20Phát\x20âm\x20tốt!','Có\x20kinh\x20nghiệm.','Xinh\x20đẹp','Cao,\x20to,\x20lớn','我喜欢睡觉。\x20(Wǒ\x20xǐhuān\x20shuìjiào.)'];_0x2a95=function(){return _0x547be6;};return _0x2a95();}const GOOGLE_CLIENT_ID=_0x418e65(0xcd);let currentUser=null;function userKey(_0x258002){const _0x369969=_0x418e65;return currentUser?_0x369969(0x15b)+currentUser['id']+'_'+_0x258002:null;}function saveUD(_0x4a403b,_0x29c2de){const _0x533fbc=_0x418e65,_0x339585=userKey(_0x4a403b);if(_0x339585)localStorage[_0x533fbc(0x1ab)](_0x339585,JSON['stringify'](_0x29c2de));}function loadUD(_0xc058c5,_0x5958a4){const _0x1b66c3=_0x418e65,_0x58ca5f=userKey(_0xc058c5);if(!_0x58ca5f)return _0x5958a4;try{return JSON['parse'](localStorage[_0x1b66c3(0x273)](_0x58ca5f))??_0x5958a4;}catch{return _0x5958a4;}}let score=0x0;function loadScore(){const _0x29a80f=_0x418e65;score=loadUD('score',0x0),document[_0x29a80f(0x1c2)](_0x29a80f(0x22c))[_0x29a80f(0x99)]=score;}function saveScore(){const _0x1fc77a=_0x418e65;saveUD(_0x1fc77a(0x300),score),document['getElementById'](_0x1fc77a(0x22c))[_0x1fc77a(0x99)]=score;}window[_0x418e65(0x309)](_0x418e65(0x2ae),()=>{const _0x45c572=setInterval(()=>{const _0x593dd0=_0x2d27;typeof google!==_0x593dd0(0x31e)&&google['accounts']&&(clearInterval(_0x45c572),google[_0x593dd0(0xf4)]['id']['initialize']({'client_id':GOOGLE_CLIENT_ID,'callback':handleGoogleCredential,'auto_select':![]}),restoreSession());},0xc8);setTimeout(()=>clearInterval(_0x45c572),0x2710);});function handleGoogleCredential(_0xc3a7fa){const _0x11ba6f=_0x418e65,_0x19cc5e=parseJwt(_0xc3a7fa[_0x11ba6f(0x215)]);if(!_0x19cc5e){showToast(_0x11ba6f(0x24e),_0x11ba6f(0x1f1));return;}currentUser={'id':_0x19cc5e['sub'],'name':_0x19cc5e['name'],'email':_0x19cc5e[_0x11ba6f(0xa6)],'picture':_0x19cc5e[_0x11ba6f(0x2d8)]},localStorage['setItem']('dhsok_session',JSON[_0x11ba6f(0x157)](currentUser)),onSignedIn(!![]);}function parseJwt(_0x242933){const _0x21aa87=_0x418e65;try{return JSON['parse'](atob(_0x242933[_0x21aa87(0x2a8)]('.')[0x1][_0x21aa87(0x2f0)](/-/g,'+')[_0x21aa87(0x2f0)](/_/g,'/')));}catch{return null;}}function restoreSession(){const _0x4ed9d4=_0x418e65;try{const _0x224034=localStorage['getItem'](_0x4ed9d4(0x14b));_0x224034&&(currentUser=JSON[_0x4ed9d4(0x1a9)](_0x224034),onSignedIn(![]));}catch{}}function onSignedIn(_0x563682){const _0x531d56=_0x418e65,{name:_0xe393e3,email:_0x2ffeec,picture:_0x28e8a4}=currentUser;document[_0x531d56(0x1c2)](_0x531d56(0xff))[_0x531d56(0x10a)][_0x531d56(0xeb)]('hidden'),document[_0x531d56(0x1c2)](_0x531d56(0x259))[_0x531d56(0x10a)][_0x531d56(0x2d7)](_0x531d56(0x1b2)),document['getElementById']('navAvatar')[_0x531d56(0x1ca)]=_0x28e8a4||'',document[_0x531d56(0x1c2)](_0x531d56(0xba))[_0x531d56(0x99)]=_0xe393e3['split']('\x20')[_0x531d56(0x1a5)](),document[_0x531d56(0x1c2)](_0x531d56(0x308))[_0x531d56(0x1ca)]=_0x28e8a4||'',document[_0x531d56(0x1c2)](_0x531d56(0xe2))[_0x531d56(0x99)]=_0xe393e3,document[_0x531d56(0x1c2)](_0x531d56(0x31f))[_0x531d56(0x99)]=_0x2ffeec,loadScore(),closeLoginModal();if(_0x563682)showToast(_0x531d56(0x103)+_0xe393e3[_0x531d56(0x2a8)]('\x20')[_0x531d56(0x1a5)]()+'!',_0x531d56(0x243));}function signOut(){const _0x25b8a2=_0x418e65;if(typeof google!=='undefined'&&google[_0x25b8a2(0xf4)])google['accounts']['id']['disableAutoSelect']();localStorage[_0x25b8a2(0x1e2)]('dhsok_session'),currentUser=null,score=0x0,document[_0x25b8a2(0x1c2)]('loginBtn')[_0x25b8a2(0x10a)]['remove'](_0x25b8a2(0x1b2)),document[_0x25b8a2(0x1c2)](_0x25b8a2(0x259))['classList'][_0x25b8a2(0xeb)](_0x25b8a2(0x1b2)),closeDropdown(),showToast(_0x25b8a2(0x1b4),'');}function triggerGoogleSignIn(){const _0x117c0d=_0x418e65;if(GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID'){showToast(_0x117c0d(0xb2),_0x117c0d(0x1f1));return;}if(typeof google===_0x117c0d(0x31e)||!google['accounts']){showToast('⚠️\x20Google\x20chưa\x20tải\x20xong,\x20thử\x20lại!','');return;}google[_0x117c0d(0xf4)]['id']['prompt'](_0x2dd6b6=>{const _0x2aa2a2=_0x117c0d;if(_0x2dd6b6[_0x2aa2a2(0x120)]()||_0x2dd6b6['isSkippedMoment']()){const _0x3132dd=new URLSearchParams({'client_id':GOOGLE_CLIENT_ID,'redirect_uri':location[_0x2aa2a2(0x101)]+location[_0x2aa2a2(0x2b6)],'response_type':_0x2aa2a2(0x18a),'scope':_0x2aa2a2(0x256),'prompt':_0x2aa2a2(0xf1)});window[_0x2aa2a2(0x194)](_0x2aa2a2(0x2d0)+_0x3132dd,'_blank',_0x2aa2a2(0x1b5));}});}function openLoginModal(){const _0x589526=_0x418e65;document[_0x589526(0x1c2)](_0x589526(0x1af))[_0x589526(0x10a)][_0x589526(0xeb)](_0x589526(0x194));}function closeLoginModal(){const _0x3a9bc2=_0x418e65;document[_0x3a9bc2(0x1c2)](_0x3a9bc2(0x1af))[_0x3a9bc2(0x10a)]['remove'](_0x3a9bc2(0x194));}function handleOverlayClick(_0x484a53){const _0x1ace3d=_0x418e65;if(_0x484a53['target']===document[_0x1ace3d(0x1c2)]('loginOverlay'))closeLoginModal();}function toggleDropdown(){const _0x323b32=_0x418e65;document[_0x323b32(0x1c2)]('userDropdown')[_0x323b32(0x10a)]['toggle'](_0x323b32(0x194));}function closeDropdown(){const _0x5e4e15=_0x418e65;document[_0x5e4e15(0x1c2)]('userDropdown')[_0x5e4e15(0x10a)][_0x5e4e15(0x2d7)](_0x5e4e15(0x194));}document['addEventListener']('click',_0x5362ba=>{const _0x2a67f1=_0x418e65,_0x2210b4=document[_0x2a67f1(0x1c2)](_0x2a67f1(0x259));if(_0x2210b4&&!_0x2210b4[_0x2a67f1(0x29b)](_0x5362ba[_0x2a67f1(0x275)]))closeDropdown();});const vocab={0x1:[{'char':'你','pinyin':'nǐ','mean':_0x418e65(0x8e),'ex':_0x418e65(0x246),'exV':_0x418e65(0x268)},{'char':'好','pinyin':_0x418e65(0x2e0),'mean':_0x418e65(0x1ef),'ex':_0x418e65(0x2e9),'exV':_0x418e65(0x329)},{'char':'我','pinyin':'wǒ','mean':_0x418e65(0x17d),'ex':'我是学生。','exV':'Tôi\x20là\x20học\x20sinh.'},{'char':'他','pinyin':'tā','mean':_0x418e65(0x2eb),'ex':_0x418e65(0x18f),'exV':'Anh\x20ấy\x20rất\x20cao.'},{'char':'她','pinyin':'tā','mean':_0x418e65(0x2e7),'ex':_0x418e65(0x23a),'exV':_0x418e65(0x179)},{'char':'爱','pinyin':'ài','mean':_0x418e65(0x165),'ex':'我爱你。','exV':_0x418e65(0x8f)},{'char':'水','pinyin':_0x418e65(0x2e8),'mean':_0x418e65(0xfc),'ex':_0x418e65(0x29c),'exV':_0x418e65(0x2dd)},{'char':'吃','pinyin':_0x418e65(0x2ee),'mean':'Ăn','ex':_0x418e65(0x15a),'exV':_0x418e65(0x16c)},{'char':'学','pinyin':_0x418e65(0x244),'mean':_0x418e65(0x14e),'ex':_0x418e65(0x118),'exV':'Học\x20tiếng\x20Trung.'},{'char':'大','pinyin':'dà','mean':_0x418e65(0x20f),'ex':'很大。','exV':_0x418e65(0x11d)},{'char':'爱','pinyin':'ài','mean':'Yêu','ex':_0x418e65(0x1f6),'exV':'Tôi\x20rất\x20yêu\x20anh\x20ấy.'},{'char':'八','pinyin':'bā','mean':_0x418e65(0x30d),'ex':_0x418e65(0x2de),'exV':'Thấp\x20thỏm,\x20không\x20yên'},{'char':'爸爸','pinyin':_0x418e65(0xef),'mean':_0x418e65(0x1b7),'ex':_0x418e65(0x222),'exV':_0x418e65(0x2bb)},{'char':'杯子','pinyin':_0x418e65(0x13a),'mean':_0x418e65(0x229),'ex':_0x418e65(0x307),'exV':_0x418e65(0x176)},{'char':'北京','pinyin':_0x418e65(0xae),'mean':_0x418e65(0x22d),'ex':_0x418e65(0xa2),'exV':_0x418e65(0x1ee)},{'char':'本','pinyin':_0x418e65(0x17f),'mean':'Cuốn,\x20quyển','ex':'那本书很适合你的儿子。\x20(Nà\x20běn\x20shū\x20hěn\x20shìhé\x20nǐ\x20de\x20érzi.)','exV':_0x418e65(0x2c2)},{'char':_0x418e65(0x121),'pinyin':_0x418e65(0x270),'mean':_0x418e65(0x325),'ex':_0x418e65(0xdc),'exV':_0x418e65(0x210)},{'char':'不','pinyin':'bù','mean':_0x418e65(0x2ff),'ex':_0x418e65(0x287),'exV':_0x418e65(0x161)},{'char':'菜','pinyin':_0x418e65(0x14d),'mean':_0x418e65(0x26c),'ex':_0x418e65(0x2fd),'exV':_0x418e65(0x240)},{'char':'茶','pinyin':_0x418e65(0x28e),'mean':_0x418e65(0x19f),'ex':'我很喜欢喝珍珠奶茶\x20。\x20(Wǒ\x20hěn\x20xǐhuān\x20hē\x20zhēnzhū\x20nǎichá\x20.)','exV':'Tôi\x20rất\x20thích\x20uống\x20trà\x20sữa\x20chân\x20trâu.'},{'char':'吃','pinyin':_0x418e65(0x2ee),'mean':'Ăn','ex':'你想吃什么？\x20(Nǐ\x20xiǎng\x20chī\x20shénme?)','exV':_0x418e65(0x269)},{'char':'出租车','pinyin':_0x418e65(0x2b4),'mean':_0x418e65(0x322),'ex':'这次旅行我们借辆出租车吧。\x20(Zhè\x20cì\x20lǚxíng\x20wǒmen\x20jiè\x20liàng\x20chūzūchē\x20ba.)','exV':_0x418e65(0x31b)},{'char':_0x418e65(0x149),'pinyin':'dǎ\x20diànhuà','mean':_0x418e65(0x124),'ex':_0x418e65(0x2ec),'exV':_0x418e65(0x180)},{'char':'大','pinyin':'dà','mean':_0x418e65(0x173),'ex':_0x418e65(0xa8),'exV':_0x418e65(0xaa)},{'char':'的','pinyin':'de','mean':_0x418e65(0x2f6),'ex':_0x418e65(0xa3),'exV':'Sách\x20của\x20tôi.'},{'char':'点','pinyin':'diǎn','mean':'Giờ','ex':_0x418e65(0xda),'exV':_0x418e65(0xab)},{'char':'电脑','pinyin':_0x418e65(0x318),'mean':_0x418e65(0x213),'ex':_0x418e65(0xdd),'exV':_0x418e65(0x126)},{'char':'电视','pinyin':_0x418e65(0x304),'mean':_0x418e65(0x188),'ex':_0x418e65(0x2bd),'exV':'Nhà\x20bạn\x20có\x20ti\x20vi\x20không?'},{'char':'电影','pinyin':'diànyǐng','mean':_0x418e65(0x111),'ex':_0x418e65(0x2c9),'exV':_0x418e65(0x220)},{'char':'东西','pinyin':_0x418e65(0xb4),'mean':_0x418e65(0x29e),'ex':'你带的是什么东西\x20？\x20(Nǐ\x20dài\x20de\x20shì\x20shénme\x20dōngxi\x20?)','exV':_0x418e65(0x116)},{'char':'都','pinyin':_0x418e65(0x1ea),'mean':'Đều','ex':_0x418e65(0x286),'exV':_0x418e65(0x138)},{'char':'读','pinyin':'dú','mean':_0x418e65(0x226),'ex':_0x418e65(0x25f),'exV':_0x418e65(0x171)},{'char':_0x418e65(0x1bc),'pinyin':_0x418e65(0x23d),'mean':_0x418e65(0x142),'ex':_0x418e65(0x27b),'exV':_0x418e65(0xc4)},{'char':'多','pinyin':_0x418e65(0x1d6),'mean':_0x418e65(0x88),'ex':_0x418e65(0xf8),'exV':_0x418e65(0x28f)},{'char':'多少','pinyin':'duōshao','mean':_0x418e65(0xcf),'ex':_0x418e65(0x2cb),'exV':_0x418e65(0x147)},{'char':'儿子','pinyin':_0x418e65(0x295),'mean':_0x418e65(0x1dc),'ex':_0x418e65(0x2c8),'exV':_0x418e65(0x326)},{'char':'二','pinyin':'èr','mean':'Số\x202','ex':_0x418e65(0xf2),'exV':_0x418e65(0x25c)},{'char':'饭馆','pinyin':_0x418e65(0x23e),'mean':_0x418e65(0xd6),'ex':_0x418e65(0x196),'exV':_0x418e65(0x212)},{'char':'飞机','pinyin':_0x418e65(0x1e7),'mean':_0x418e65(0x90),'ex':_0x418e65(0x110),'exV':_0x418e65(0x1ad)},{'char':'分钟','pinyin':'fēnzhōng','mean':_0x418e65(0xe6),'ex':'现在5点30分钟。\x20(Xiànzài\x20wǔ\x20diǎn\x20sānshí\x20fēnzhōng.)','exV':_0x418e65(0x263)},{'char':'高兴','pinyin':'gāoxìng','mean':_0x418e65(0x28d),'ex':'见到你我很高兴\x20。\x20(Jiàn\x20dào\x20nǐ\x20wǒ\x20hěn\x20gāoxìng.)','exV':'Gặp\x20được\x20bạn\x20mình\x20rất\x20vui.'},{'char':'个','pinyin':'gè','mean':'Cái','ex':'你买几个\x20？\x20(Nǐ\x20mǎi\x20jǐ\x20gè\x20?)','exV':'Bạn\x20mua\x20mấy\x20cái?'},{'char':'工作','pinyin':_0x418e65(0x10d),'mean':_0x418e65(0x2df),'ex':_0x418e65(0x128),'exV':_0x418e65(0x306)},{'char':'狗','pinyin':_0x418e65(0x248),'mean':_0x418e65(0x30f),'ex':_0x418e65(0x92),'exV':_0x418e65(0x20e)},{'char':'汉语','pinyin':'Hànyǔ','mean':'Tiếng\x20Hán','ex':_0x418e65(0x23b),'exV':'Bạn\x20thấy\x20tiếng\x20Trung\x20khó\x20không?'},{'char':'好','pinyin':_0x418e65(0x2e0),'mean':_0x418e65(0x245),'ex':_0x418e65(0x1a7),'exV':_0x418e65(0xbd)},{'char':'','pinyin':'','mean':_0x418e65(0x9a),'ex':_0x418e65(0x255),'exV':_0x418e65(0x135)},{'char':'喝','pinyin':'hē','mean':_0x418e65(0x211),'ex':'我喜欢喝果汁。\x20(Wǒ\x20xǐhuān\x20hē\x20guǒzhī.)','exV':_0x418e65(0x1d0)},{'char':'和','pinyin':'hé','mean':'Và','ex':_0x418e65(0x2f9),'exV':_0x418e65(0x230)},{'char':'很','pinyin':_0x418e65(0x1e5),'mean':'Rất','ex':_0x418e65(0x12a),'exV':_0x418e65(0x16b)},{'char':'后面','pinyin':'hòumiàn','mean':'Phía\x20sau','ex':'我家是在学校后面。\x20(Wǒjiā\x20shì\x20zài\x20xuéxiào\x20hòumiàn.)','exV':'Nhà\x20tôi\x20ở\x20phía\x20sau\x20trường.'},{'char':'回','pinyin':'huí','mean':_0x418e65(0xe0),'ex':_0x418e65(0x143),'exV':_0x418e65(0x150)},{'char':'会','pinyin':_0x418e65(0x8d),'mean':'Sẽ','ex':_0x418e65(0xf0),'exV':_0x418e65(0x208)},{'char':_0x418e65(0x26a),'pinyin':'huǒchēzhàn','mean':_0x418e65(0xd1),'ex':_0x418e65(0x14a),'exV':_0x418e65(0xc1)},{'char':'几','pinyin':'jǐ','mean':_0x418e65(0x151),'ex':'你家有几\x20口人？\x20(Nǐ\x20jiā\x20yǒu\x20jǐ\x20kǒu\x20rén?)','exV':_0x418e65(0x239)},{'char':'家','pinyin':'jiā','mean':_0x418e65(0x30e),'ex':_0x418e65(0x199),'exV':_0x418e65(0x134)},{'char':'叫','pinyin':'jiào','mean':'Gọi','ex':_0x418e65(0x108),'exV':_0x418e65(0x200)},{'char':'今天','pinyin':_0x418e65(0x214),'mean':_0x418e65(0x26d),'ex':_0x418e65(0x1fd),'exV':_0x418e65(0x206)},{'char':'九','pinyin':_0x418e65(0x16a),'mean':_0x418e65(0x190),'ex':_0x418e65(0x168),'exV':'Sáng\x20nay\x209\x20giờ\x20vào\x20lớp.'},{'char':'开','pinyin':'kāi','mean':'Mở','ex':'我在外面，你开\x20门吧。\x20(Wǒ\x20zài\x20wàimiàn,\x20nǐ\x20kāi\x20mén\x20ba.)','exV':_0x418e65(0x162)},{'char':'看','pinyin':_0x418e65(0x123),'mean':_0x418e65(0x2dc),'ex':_0x418e65(0x305),'exV':_0x418e65(0x21c)},{'char':'看见','pinyin':_0x418e65(0x276),'mean':_0x418e65(0xc3),'ex':_0x418e65(0x1d5),'exV':_0x418e65(0x30b)},{'char':'块','pinyin':_0x418e65(0x117),'mean':_0x418e65(0x323),'ex':_0x418e65(0xe7),'exV':'Cái\x20này\x203\x20đồng.'},{'char':'来','pinyin':_0x418e65(0x274),'mean':_0x418e65(0xe8),'ex':'我来了。\x20(Wǒ\x20lái\x20le.)','exV':_0x418e65(0x2c5)},{'char':'老师','pinyin':_0x418e65(0x2f7),'mean':_0x418e65(0x2a5),'ex':_0x418e65(0x1c9),'exV':_0x418e65(0x8a)},{'char':'了','pinyin':'le','mean':'Đã,\x20rồi','ex':_0x418e65(0x1e1),'exV':_0x418e65(0xf7)},{'char':'冷','pinyin':_0x418e65(0x235),'mean':_0x418e65(0x152),'ex':_0x418e65(0x317),'exV':_0x418e65(0x183)},{'char':'里','pinyin':'lǐ','mean':_0x418e65(0xb9),'ex':'我坐在家里\x20。\x20(Wǒ\x20zuò\x20zàijiā\x20lǐ\x20.)','exV':_0x418e65(0x2ba)},{'char':'零','pinyin':_0x418e65(0xee),'mean':_0x418e65(0x1ce),'ex':_0x418e65(0xc9),'exV':_0x418e65(0x1a8)},{'char':'六','pinyin':'liù','mean':_0x418e65(0xd8),'ex':_0x418e65(0x11b),'exV':_0x418e65(0x2c7)},{'char':'妈妈','pinyin':_0x418e65(0x2d4),'mean':'Mẹ,\x20má','ex':_0x418e65(0xb7),'exV':'Người\x20tôi\x20yêu\x20nhất\x20là\x20mẹ.'},{'char':'吗','pinyin':'ma','mean':'Ừ','ex':'你喜欢我吗？\x20(Nǐ\x20xǐhuān\x20wǒ\x20ma?)','exV':_0x418e65(0xc2)},{'char':'买','pinyin':_0x418e65(0x2ce),'mean':_0x418e65(0xbc),'ex':_0x418e65(0x1c5),'exV':_0x418e65(0xc0)},{'char':'猫','pinyin':_0x418e65(0x2cd),'mean':'Mèo','ex':_0x418e65(0x238),'exV':_0x418e65(0x13f)},{'char':'没','pinyin':'méi','mean':_0x418e65(0x2a0),'ex':_0x418e65(0x1d4),'exV':'Tôi\x20chưa\x20về\x20đến\x20nhà.'},{'char':'','pinyin':'mò','mean':_0x418e65(0x1d1),'ex':_0x418e65(0x320),'exV':_0x418e65(0xad)},{'char':_0x418e65(0x241),'pinyin':'méi\x20guānxi','mean':_0x418e65(0x272),'ex':'这件事跟那件事真的没关系。\x20(Zhè\x20jiàn\x20shì\x20gēn\x20nà\x20jiàn\x20shì\x20zhēn\x20de\x20méi\x20guānxi\x20.)','exV':_0x418e65(0x25d)},{'char':'米饭','pinyin':_0x418e65(0x25b),'mean':'Cơm','ex':_0x418e65(0x254),'exV':_0x418e65(0x269)},{'char':'明天','pinyin':_0x418e65(0x260),'mean':_0x418e65(0xa9),'ex':_0x418e65(0x32d),'exV':_0x418e65(0xa5)},{'char':'名字','pinyin':'míngzi','mean':_0x418e65(0xd7),'ex':'你叫什么名字\x20？\x20(Nǐ\x20jiào\x20shénme\x20míngzi\x20?)','exV':_0x418e65(0xec)},{'char':_0x418e65(0x12f),'pinyin':_0x418e65(0x2f2),'mean':_0x418e65(0x30a),'ex':_0x418e65(0x141),'exV':_0x418e65(0x281)},{'char':_0x418e65(0x25e),'pinyin':_0x418e65(0x1cc),'mean':'Ở\x20kia','ex':_0x418e65(0x20d),'exV':'Cuốn\x20sách\x20này\x20ở\x20bên\x20kia.'},{'char':'呢','pinyin':'ne','mean':'Thế,\x20nhỉ,\x20vậy,\x20mà,\x20nhé','ex':_0x418e65(0xce),'exV':'Bạn\x20thì\x20sao?'},{'char':'能','pinyin':_0x418e65(0x294),'mean':'Có\x20thể','ex':_0x418e65(0x265),'exV':_0x418e65(0x232)},{'char':'你','pinyin':'nǐ','mean':_0x418e65(0x104),'ex':'我爱你。\x20(Wǒ\x20ài\x20nǐ.)','exV':'Tôi\x20yêu\x20bạn.'},{'char':'年','pinyin':_0x418e65(0x234),'mean':_0x418e65(0x2a4),'ex':_0x418e65(0xc7),'exV':_0x418e65(0x301)},{'char':'女儿','pinyin':_0x418e65(0x225),'mean':_0x418e65(0x205),'ex':_0x418e65(0x167),'exV':_0x418e65(0x159)},{'char':'朋友','pinyin':_0x418e65(0x2e3),'mean':_0x418e65(0x289),'ex':_0x418e65(0xe3),'exV':_0x418e65(0x178)},{'char':'漂亮','pinyin':_0x418e65(0x114),'mean':_0x418e65(0x1bf),'ex':_0x418e65(0xf6),'exV':_0x418e65(0x296)},{'char':'苹果','pinyin':_0x418e65(0x29d),'mean':'Quả\x20táo','ex':'圣诞节送苹果。\x20(Shèngdàn\x20jié\x20sòng\x20píngguǒ.)','exV':_0x418e65(0x2af)},{'char':'七','pinyin':'qī','mean':_0x418e65(0x86),'ex':_0x418e65(0x28b),'exV':_0x418e65(0x2f4)},{'char':'钱','pinyin':_0x418e65(0x98),'mean':'Tiền','ex':_0x418e65(0x122),'exV':_0x418e65(0x24b)},{'char':'前面','pinyin':_0x418e65(0x2d5),'mean':'Phía\x20trước','ex':'前面是我的学校。\x20(qiánmiàn\x20shì\x20wǒ\x20de\x20xuéxiào.)','exV':_0x418e65(0xa1)},{'char':'请','pinyin':_0x418e65(0x282),'mean':_0x418e65(0x2e4),'ex':_0x418e65(0x112),'exV':_0x418e65(0x1a2)},{'char':'去','pinyin':'qù','mean':'Đi','ex':'你去哪呀？\x20(Nǐ\x20qù\x20nǎ\x20ya?)','exV':_0x418e65(0x15c)},{'char':'热','pinyin':'rè','mean':'Nóng','ex':'今天好热啊。\x20(Jīntiān\x20hǎo\x20rè\x20a.)','exV':'Hôm\x20nay\x20nóng\x20thật\x20đó.'},{'char':'人','pinyin':_0x418e65(0x2ea),'mean':_0x418e65(0x85),'ex':'这个人是谁？\x20(Zhège\x20rén\x20shì\x20shéi?)','exV':_0x418e65(0x181)},{'char':'认识','pinyin':_0x418e65(0x2d3),'mean':'Nhận\x20biết','ex':_0x418e65(0x163),'exV':_0x418e65(0xe1)},{'char':'日','pinyin':'rì','mean':'Ngày','ex':_0x418e65(0x279),'exV':_0x418e65(0x29a)},{'char':'三','pinyin':_0x418e65(0x24f),'mean':_0x418e65(0x32a),'ex':_0x418e65(0x1a0),'exV':'3\x20giờ\x20rồi\x20bạn\x20còn\x20làm\x20gì\x20đấy?'},{'char':'商店','pinyin':'shāngdiàn','mean':_0x418e65(0xe4),'ex':'这是你姐的商店\x20，对吗？\x20(Zhè\x20shì\x20nǐ\x20jiě\x20de\x20shāngdiàn\x20,\x20duì\x20ma?)','exV':_0x418e65(0x23f)},{'char':'上','pinyin':_0x418e65(0x19b),'mean':'Phía\x20trên','ex':'你的儿子在上\x20面。\x20(Nǐ\x20de\x20érzi\x20zài\x20shàng\x20miàn.)','exV':_0x418e65(0x236)},{'char':'上午','pinyin':_0x418e65(0x82),'mean':_0x418e65(0x2b0),'ex':'上午去工作。\x20(Shàngwǔ\x20qù\x20gōngzuò.)','exV':_0x418e65(0x11e)},{'char':'少','pinyin':_0x418e65(0xbb),'mean':_0x418e65(0xc5),'ex':'我缺少了时间，所以做不到的。\x20(Wǒ\x20quē\x20shǎo\x20le\x20shíjiān,\x20suǒyǐ\x20zuò\x20bú\x20dào\x20de.)','exV':'Tôi\x20thiếu\x20thời\x20gian\x20nên\x20không\x20làm\x20được\x20việc\x20rồi.'},{'char':'谁','pinyin':_0x418e65(0xf9),'mean':'Ai','ex':_0x418e65(0x187),'exV':'Bạn\x20là\x20ai?'},{'char':'什么','pinyin':_0x418e65(0x242),'mean':'Cái\x20gì?','ex':'这是什么？\x20(Zhè\x20shì\x20shénme?)','exV':'Đây\x20là\x20cái\x20gì?'},{'char':'十','pinyin':'shí','mean':_0x418e65(0x2b7),'ex':'十块钱一份。\x20(Shí\x20kuài\x20qián\x20yī\x20fèn.)','exV':_0x418e65(0x13e)},{'char':'时候','pinyin':_0x418e65(0x31d),'mean':_0x418e65(0x209),'ex':_0x418e65(0x19c),'exV':_0x418e65(0x1d9)},{'char':'是','pinyin':_0x418e65(0x1f9),'mean':'Là','ex':_0x418e65(0x182),'exV':_0x418e65(0x2cc)},{'char':'书','pinyin':_0x418e65(0x158),'mean':_0x418e65(0x297),'ex':'这是你的书。\x20(Zhè\x20shì\x20nǐ\x20de\x20shū.)','exV':_0x418e65(0x237)},{'char':'水','pinyin':_0x418e65(0x2e8),'mean':'Nước','ex':_0x418e65(0x314),'exV':'Tôi\x20uống\x20nước\x20khoáng.'},{'char':'水果','pinyin':_0x418e65(0x203),'mean':_0x418e65(0x31a),'ex':'你喜欢哪种水果\x20呢？\x20(Nǐ\x20xǐhuān\x20nǎ\x20zhǒng\x20shuǐguǒ\x20ne?)','exV':_0x418e65(0x1ac)},{'char':'睡觉','pinyin':_0x418e65(0x100),'mean':_0x418e65(0x288),'ex':_0x418e65(0x1c1),'exV':_0x418e65(0x2d9)},{'char':'说话','pinyin':_0x418e65(0xde),'mean':_0x418e65(0x266),'ex':_0x418e65(0x172),'exV':_0x418e65(0x204)},{'char':'四','pinyin':'sì','mean':_0x418e65(0x1cb),'ex':'四月我打算来河内。\x20(sì\x20yuè\x20wǒ\x20dǎsuàn\x20lái\x20Hénèi.)','exV':_0x418e65(0x24a)},{'char':'岁','pinyin':_0x418e65(0x84),'mean':_0x418e65(0xa0),'ex':_0x418e65(0x155),'exV':'Năm\x20nay\x20bạn\x20bao\x20bao\x20nhiêu\x20tuổi?'},{'char':'他','pinyin':'tā','mean':_0x418e65(0x154),'ex':_0x418e65(0xb3),'exV':'Anh\x20ấy\x20là\x20ai?'},{'char':'她','pinyin':'tā','mean':'Cô','ex':'你猜猜她是谁？\x20(Nǐ\x20cāi\x20cāi\x20tā\x20shì\x20shéi?)','exV':'Bạn\x20đoán\x20xem\x20cô\x20ấy\x20là\x20ai?'},{'char':'太','pinyin':'tài','mean':_0x418e65(0x1c0),'ex':_0x418e65(0x107),'exV':_0x418e65(0xc8)},{'char':'天气','pinyin':'tiānqi','mean':_0x418e65(0x186),'ex':_0x418e65(0x21e),'exV':_0x418e65(0x2bf)},{'char':'听','pinyin':_0x418e65(0x2fb),'mean':_0x418e65(0x1c8),'ex':'你听什么歌？\x20(Nǐ\x20tīng\x20shénme\x20gē?)','exV':'Bạn\x20nghe\x20bài\x20hát\x20gì\x20đó?'},{'char':'同学','pinyin':_0x418e65(0xb5),'mean':_0x418e65(0xd4),'ex':'这是我老同学。\x20(Zhè\x20shì\x20wǒ\x20lǎo\x20tóngxué\x20.)','exV':_0x418e65(0x10b)},{'char':'喂','pinyin':_0x418e65(0x192),'mean':_0x418e65(0x8c),'ex':_0x418e65(0x137),'exV':_0x418e65(0x125)},{'char':'我','pinyin':'wǒ','mean':_0x418e65(0x17d),'ex':_0x418e65(0x1d8),'exV':_0x418e65(0x1b8)},{'char':'我们','pinyin':_0x418e65(0x146),'mean':_0x418e65(0x207),'ex':'我们是国家大学的学生。\x20(Wǒmen\x20shì\x20Guójiā\x20dàxué\x20de\x20xuéshēng.)','exV':_0x418e65(0x9d)},{'char':'五','pinyin':'wǔ','mean':'Số\x205','ex':_0x418e65(0x2ac),'exV':_0x418e65(0x119)},{'char':'喜欢','pinyin':'xǐhuan','mean':_0x418e65(0x27d),'ex':_0x418e65(0x28a),'exV':_0x418e65(0x2a2)},{'char':'下','pinyin':_0x418e65(0x19a),'mean':_0x418e65(0x311),'ex':_0x418e65(0x198),'exV':'Ví\x20tiền\x20ở\x20phía\x20dưới\x20túi.'},{'char':'下午','pinyin':_0x418e65(0x327),'mean':_0x418e65(0x106),'ex':_0x418e65(0x1b3),'exV':_0x418e65(0x2cf)},{'char':'下雨','pinyin':_0x418e65(0x12d),'mean':_0x418e65(0x21d),'ex':_0x418e65(0x13d),'exV':_0x418e65(0xa7)},{'char':'先生','pinyin':_0x418e65(0x20b),'mean':_0x418e65(0x2ab),'ex':_0x418e65(0x191),'exV':_0x418e65(0x290)},{'char':'现在','pinyin':_0x418e65(0x1a4),'mean':_0x418e65(0x233),'ex':_0x418e65(0xdb),'exV':_0x418e65(0x315)},{'char':'想','pinyin':'xiǎng','mean':_0x418e65(0x2ad),'ex':_0x418e65(0x1f3),'exV':_0x418e65(0x292)},{'char':'小','pinyin':_0x418e65(0x105),'mean':'Bé,\x20nhỏ','ex':'我是小可爱。\x20(Wǒ\x20shì\x20xiǎokě’ài.)','exV':_0x418e65(0x252)},{'char':'小姐','pinyin':_0x418e65(0x170),'mean':_0x418e65(0x174),'ex':_0x418e65(0x277),'exV':_0x418e65(0x1f5)},{'char':'些','pinyin':_0x418e65(0x1ed),'mean':_0x418e65(0x17b),'ex':_0x418e65(0x1b1),'exV':_0x418e65(0x10e)},{'char':'写','pinyin':_0x418e65(0xea),'mean':_0x418e65(0x1fc),'ex':_0x418e65(0x102),'exV':_0x418e65(0x145)},{'char':'谢谢','pinyin':_0x418e65(0x19d),'mean':_0x418e65(0x1c3),'ex':_0x418e65(0x1f0),'exV':_0x418e65(0xa4)},{'char':'星期','pinyin':'xīngqī','mean':_0x418e65(0x30c),'ex':_0x418e65(0x1aa),'exV':'Hôm\x20nay\x20là\x20thứ\x203.'},{'char':'学生','pinyin':_0x418e65(0x1ec),'mean':_0x418e65(0x2a9),'ex':_0x418e65(0x136),'exV':_0x418e65(0x193)},{'char':'学习','pinyin':'xuéxí','mean':'Học\x20tập','ex':_0x418e65(0x9e),'exV':_0x418e65(0x93)},{'char':'学校','pinyin':_0x418e65(0x18c),'mean':_0x418e65(0x26b),'ex':'这是我的学校。\x20(Zhè\x20shì\x20wǒ\x20de\x20xuéxiào.)','exV':'Đây\x20là\x20trường\x20học\x20của\x20tôi.'},{'char':'一','pinyin':'yī','mean':'Số\x201','ex':_0x418e65(0x16e),'exV':_0x418e65(0x2fa)},{'char':'衣服','pinyin':_0x418e65(0x223),'mean':_0x418e65(0xc6),'ex':_0x418e65(0x23c),'exV':'Tôi\x20rất\x20thích\x20bộ\x20quần\x20áo\x20này.'},{'char':'医生','pinyin':'yīshēng','mean':'Bác\x20sĩ','ex':'那位医生很照顾我。\x20(Nà\x20wèi\x20yīshēng\x20hěn\x20zhàogù\x20wǒ.)','exV':'Vị\x20bác\x20sĩ\x20kia\x20chăm\x20sóc\x20tôi\x20rất\x20chu\x20đáo.'},{'char':'医院','pinyin':_0x418e65(0xfa),'mean':_0x418e65(0x2f3),'ex':'这是….医院。\x20(Zhè\x20shì….yīyuàn.)','exV':_0x418e65(0xbe)},{'char':'椅子','pinyin':_0x418e65(0xfb),'mean':_0x418e65(0x299),'ex':_0x418e65(0x22f),'exV':_0x418e65(0x1e4)},{'char':'月','pinyin':_0x418e65(0x1de),'mean':'Có','ex':_0x418e65(0xb8),'exV':_0x418e65(0x1fe)},{'char':'月','pinyin':'yuè','mean':_0x418e65(0x10c),'ex':_0x418e65(0x1dd),'exV':_0x418e65(0x27c)},{'char':'在','pinyin':_0x418e65(0x169),'mean':_0x418e65(0x189),'ex':_0x418e65(0x148),'exV':'Có\x20tôi\x20ở\x20đây.'},{'char':'再见','pinyin':_0x418e65(0x21b),'mean':'Hẹn\x20gặp\x20lại','ex':_0x418e65(0x1eb),'exV':'Tạm\x20biệt,\x20hẹn\x20gặp\x20lại.'},{'char':'怎么','pinyin':'zěnme','mean':_0x418e65(0x94),'ex':'你怎么了？\x20(Nǐzěnmele?)','exV':_0x418e65(0x267)},{'char':_0x418e65(0x14c),'pinyin':_0x418e65(0x29f),'mean':_0x418e65(0x132),'ex':_0x418e65(0x26e),'exV':_0x418e65(0x2b1)},{'char':_0x418e65(0x250),'pinyin':'zhè\x20(zhèr)','mean':_0x418e65(0x16f),'ex':'这(这儿)是怎么回事？\x20(Zhè(r)shì\x20zěnme\x20huí\x20shì?)','exV':_0x418e65(0xcb)},{'char':'中国','pinyin':_0x418e65(0x1c7),'mean':_0x418e65(0x2c6),'ex':_0x418e65(0x227),'exV':'Bạn\x20muốn\x20đến\x20Trung\x20Quốc\x20du\x20học.'},{'char':'中午','pinyin':_0x418e65(0x2a3),'mean':_0x418e65(0x2b0),'ex':_0x418e65(0x302),'exV':_0x418e65(0x1cd)},{'char':'住','pinyin':_0x418e65(0x1e6),'mean':'Ở\x20tại,\x20sống\x20tại','ex':_0x418e65(0x195),'exV':_0x418e65(0x166)},{'char':'桌子','pinyin':'zhuōzi','mean':'Cái\x20bàn','ex':_0x418e65(0x2e5),'exV':_0x418e65(0x2be)},{'char':'字','pinyin':'zì','mean':'Tự','ex':'你叫什么名字？\x20(Nǐ\x20jiào\x20shénme\x20míngzì?)','exV':_0x418e65(0xec)},{'char':'昨天','pinyin':_0x418e65(0x12b),'mean':'Hôm\x20qua','ex':_0x418e65(0x32b),'exV':'Hôm\x20qua\x20tôi\x20trở\x20về.'},{'char':'坐','pinyin':_0x418e65(0x156),'mean':_0x418e65(0x13b),'ex':_0x418e65(0x2f1),'exV':_0x418e65(0x253)},{'char':'做','pinyin':_0x418e65(0x156),'mean':'Làm','ex':_0x418e65(0x184),'exV':_0x418e65(0x228)}],0x2:[{'char':'学习','pinyin':_0x418e65(0x9f),'mean':_0x418e65(0x2bc),'ex':_0x418e65(0x1ff),'exV':_0x418e65(0x201)},{'char':'谢谢','pinyin':_0x418e65(0x1d7),'mean':_0x418e65(0x1c3),'ex':_0x418e65(0x2a1),'exV':_0x418e65(0xaf)},{'char':'朋友','pinyin':_0x418e65(0x2e3),'mean':_0x418e65(0x289),'ex':'好朋友。','exV':_0x418e65(0x1f2)},{'char':'高兴','pinyin':'gāoxìng','mean':'Vui\x20mừng','ex':'很高兴认识你。','exV':_0x418e65(0x2c4)},{'char':'漂亮','pinyin':_0x418e65(0x114),'mean':_0x418e65(0x285),'ex':'她很漂亮。','exV':_0x418e65(0x21f)},{'char':'工作','pinyin':_0x418e65(0x10d),'mean':_0x418e65(0xb6),'ex':_0x418e65(0x185),'exV':_0x418e65(0x24d)},{'char':'喜欢','pinyin':_0x418e65(0x15f),'mean':_0x418e65(0x27d),'ex':_0x418e65(0x283),'exV':_0x418e65(0x261)},{'char':'时间','pinyin':_0x418e65(0x1f7),'mean':_0x418e65(0x2aa),'ex':_0x418e65(0x1a6),'exV':_0x418e65(0x1e9)}],0x3:[{'char':'经验','pinyin':_0x418e65(0x216),'mean':_0x418e65(0x2e2),'ex':'有经验。','exV':_0x418e65(0x1be)},{'char':'环境','pinyin':'huánjìng','mean':_0x418e65(0x197),'ex':_0x418e65(0x1b6),'exV':_0x418e65(0x284)},{'char':'努力','pinyin':_0x418e65(0x89),'mean':'Cố\x20gắng\x20/\x20Nỗ\x20lực','ex':_0x418e65(0x113),'exV':'Nỗ\x20lực\x20học\x20tập.'},{'char':'文化','pinyin':_0x418e65(0x316),'mean':_0x418e65(0x293),'ex':'中国文化。','exV':_0x418e65(0x133)},{'char':'机会','pinyin':_0x418e65(0x2e1),'mean':_0x418e65(0x2fc),'ex':_0x418e65(0x9c),'exV':_0x418e65(0x2a6)},{'char':'意思','pinyin':_0x418e65(0x303),'mean':_0x418e65(0x1cf),'ex':_0x418e65(0x2ed),'exV':_0x418e65(0x130)}]};let curMode=_0x418e65(0xd3),curLevel=0x1,curIdx=0x0,isFlipped=![],isMicOn=![];function getCards(){return vocab[curLevel]||vocab[0x1];}function setMode(_0x37a180,_0x19addc){const _0x6a57b6=_0x418e65;curMode=_0x37a180,curIdx=0x0,isFlipped=![],document[_0x6a57b6(0xac)]('.mode-card')[_0x6a57b6(0x175)](_0xf29de3=>_0xf29de3[_0x6a57b6(0x10a)]['remove'](_0x6a57b6(0x27a))),_0x19addc['classList'][_0x6a57b6(0xeb)](_0x6a57b6(0x27a)),['readMode','speakMode',_0x6a57b6(0x1c6),_0x6a57b6(0x28c)][_0x6a57b6(0x175)](_0x76f26d=>document[_0x6a57b6(0x1c2)](_0x76f26d)[_0x6a57b6(0x10a)][_0x6a57b6(0xeb)](_0x6a57b6(0x1b2)));const _0x2f52e7={'read':_0x6a57b6(0x217),'speak':_0x6a57b6(0x12e),'write':_0x6a57b6(0x1c6),'listen':_0x6a57b6(0x28c)};document[_0x6a57b6(0x1c2)](_0x2f52e7[_0x37a180])['classList']['remove'](_0x6a57b6(0x1b2));const _0x40815c={'read':_0x6a57b6(0x20c),'speak':'🗣️\x20Luyện\x20nói','write':_0x6a57b6(0x1da),'listen':_0x6a57b6(0x278)};document[_0x6a57b6(0x1c2)](_0x6a57b6(0x2c3))[_0x6a57b6(0x99)]=_0x40815c[_0x37a180]+(_0x6a57b6(0xd9)+curLevel),updateProgress(),renderCard();}function setLevel(_0x26ea42,_0xb2bd4d){const _0x4d4275=_0x418e65;curLevel=_0x26ea42,curIdx=0x0,isFlipped=![],document[_0x4d4275(0xac)](_0x4d4275(0x2f8))[_0x4d4275(0x175)](_0x198764=>_0x198764[_0x4d4275(0x10a)][_0x4d4275(0x2d7)]('active')),_0xb2bd4d[_0x4d4275(0x10a)][_0x4d4275(0xeb)]('active'),document['getElementById'](_0x4d4275(0x2c3))[_0x4d4275(0x99)]=document[_0x4d4275(0x1c2)](_0x4d4275(0x2c3))['textContent'][_0x4d4275(0x2f0)](/HSK \d/,_0x4d4275(0x221)+_0x26ea42),updateProgress(),renderCard();}function updateProgress(){const _0x2b2974=_0x418e65,_0x2b09b4=getCards(),_0x5d775d=curIdx+0x1,_0xa4cdce=_0x2b09b4['length'];document[_0x2b2974(0x1c2)]('fcProgress')[_0x2b2974(0x99)]=_0x5d775d+_0x2b2974(0x11f)+_0xa4cdce,document['getElementById'](_0x2b2974(0x19e))[_0x2b2974(0x1bb)][_0x2b2974(0xe9)]=_0x5d775d/_0xa4cdce*0x64+'%';}function renderCard(){const _0x3242f6=_0x418e65,_0x465843=getCards(),_0x40a2d1=_0x465843[curIdx%_0x465843[_0x3242f6(0x13c)]];isFlipped=![],document[_0x3242f6(0x1c2)](_0x3242f6(0x319))['classList'][_0x3242f6(0x2d7)](_0x3242f6(0x2ef)),document['getElementById'](_0x3242f6(0x1f8))[_0x3242f6(0x99)]=_0x40a2d1['char'],document[_0x3242f6(0x1c2)](_0x3242f6(0x32c))[_0x3242f6(0x99)]=_0x40a2d1[_0x3242f6(0x9b)],document[_0x3242f6(0x1c2)](_0x3242f6(0x18d))[_0x3242f6(0x99)]=_0x40a2d1[_0x3242f6(0x109)],document[_0x3242f6(0x1c2)](_0x3242f6(0x1d2))[_0x3242f6(0x99)]=_0x40a2d1[_0x3242f6(0x9b)],document[_0x3242f6(0x1c2)]('fcMeaning')['textContent']=_0x40a2d1[_0x3242f6(0x22e)],document['getElementById'](_0x3242f6(0x2b8))[_0x3242f6(0x99)]=_0x40a2d1['ex'],document[_0x3242f6(0x1c2)](_0x3242f6(0x1fb))[_0x3242f6(0x99)]='➤\x20'+_0x40a2d1[_0x3242f6(0x127)],document[_0x3242f6(0x1c2)](_0x3242f6(0x2e6))[_0x3242f6(0x99)]=_0x40a2d1[_0x3242f6(0x109)],document[_0x3242f6(0x1c2)](_0x3242f6(0x1e0))[_0x3242f6(0x99)]=_0x40a2d1[_0x3242f6(0x22e)],document[_0x3242f6(0x1c2)](_0x3242f6(0x21a))[_0x3242f6(0x99)]=_0x40a2d1[_0x3242f6(0x9b)],document['getElementById'](_0x3242f6(0x280))[_0x3242f6(0x99)]=_0x40a2d1[_0x3242f6(0x22e)],document[_0x3242f6(0x1c2)](_0x3242f6(0x2db))[_0x3242f6(0x99)]=_0x40a2d1[_0x3242f6(0x9b)],document[_0x3242f6(0x1c2)](_0x3242f6(0x1a1))['textContent']=_0x3242f6(0x1d3)+_0x40a2d1[_0x3242f6(0x109)][_0x3242f6(0x2a8)]('')['map'](()=>'□')['join']('\x20'),clearCanvas(),renderListenOptions(_0x40a2d1),updateProgress();}function flipCard(){const _0x38acb1=_0x418e65;isFlipped=!isFlipped,document[_0x38acb1(0x1c2)](_0x38acb1(0x319))[_0x38acb1(0x10a)][_0x38acb1(0x324)](_0x38acb1(0x2ef),isFlipped);}function nextCard(){const _0x297f86=_0x418e65;curIdx=(curIdx+0x1)%getCards()[_0x297f86(0x13c)],renderCard();}function markCorrect(){const _0x1de049=_0x418e65;score++,saveScore(),showToast(_0x1de049(0x247),_0x1de049(0x243)),nextCard();}function markWrong(){const _0x2ea75b=_0x418e65;showToast(_0x2ea75b(0x131),_0x2ea75b(0x1f1)),nextCard();}function toggleMic(){const _0x36a44a=_0x418e65;isMicOn=!isMicOn;const _0x1cd697=document['getElementById'](_0x36a44a(0x15d)),_0x262504=document['getElementById'](_0x36a44a(0x1ba));isMicOn?(_0x1cd697[_0x36a44a(0x10a)][_0x36a44a(0xeb)](_0x36a44a(0x271)),_0x1cd697[_0x36a44a(0x99)]='⏹',_0x262504[_0x36a44a(0x99)]=_0x36a44a(0xf5)):(_0x1cd697[_0x36a44a(0x10a)]['remove'](_0x36a44a(0x271)),_0x1cd697[_0x36a44a(0x99)]='🎤',_0x262504['textContent']=_0x36a44a(0x17a),setTimeout(()=>{const _0x480e1e=_0x36a44a,_0x5e9aeb=Math[_0x480e1e(0xd0)]()>0.3;_0x262504[_0x480e1e(0x99)]=_0x5e9aeb?_0x480e1e(0x1bd):'🔶\x20Cần\x20cải\x20thiện\x20thanh\x20điệu.',showToast(_0x5e9aeb?_0x480e1e(0xb0):_0x480e1e(0x202),_0x5e9aeb?_0x480e1e(0x243):'');},0x4b0));}function spokenCorrect(){const _0x4b3f9f=_0x418e65;score++,saveScore(),showToast('✅\x20Đánh\x20dấu\x20đúng!',_0x4b3f9f(0x243)),nextCard();}const canvas=document[_0x418e65(0x1c2)](_0x418e65(0x10f)),ctx=canvas['getContext']('2d');let drawing=![],lastX=0x0,lastY=0x0;function getPos(_0x1e305b){const _0x268e54=_0x418e65,_0x2fd89a=canvas[_0x268e54(0x1a3)]();if(_0x1e305b['touches'])return{'x':_0x1e305b[_0x268e54(0x312)][0x0]['clientX']-_0x2fd89a[_0x268e54(0x24c)],'y':_0x1e305b[_0x268e54(0x312)][0x0][_0x268e54(0x2ca)]-_0x2fd89a[_0x268e54(0x262)]};return{'x':_0x1e305b[_0x268e54(0x17c)]-_0x2fd89a[_0x268e54(0x24c)],'y':_0x1e305b[_0x268e54(0x2ca)]-_0x2fd89a['top']};}canvas[_0x418e65(0x309)]('mousedown',_0x125d65=>{drawing=!![];const _0x9c1848=getPos(_0x125d65);lastX=_0x9c1848['x'],lastY=_0x9c1848['y'];}),canvas['addEventListener'](_0x418e65(0x177),_0x55fa24=>{if(!drawing)return;const _0x3c4c13=getPos(_0x55fa24);drawStroke(lastX,lastY,_0x3c4c13['x'],_0x3c4c13['y']),lastX=_0x3c4c13['x'],lastY=_0x3c4c13['y'];}),canvas[_0x418e65(0x309)](_0x418e65(0x313),()=>drawing=![]),canvas[_0x418e65(0x309)](_0x418e65(0x2f5),()=>drawing=![]),canvas[_0x418e65(0x309)](_0x418e65(0x11a),_0x2140ef=>{const _0x45de19=_0x418e65;_0x2140ef[_0x45de19(0xd2)](),drawing=!![];const _0x430ca5=getPos(_0x2140ef);lastX=_0x430ca5['x'],lastY=_0x430ca5['y'];}),canvas[_0x418e65(0x309)](_0x418e65(0x27e),_0x2e268e=>{const _0x4d5586=_0x418e65;_0x2e268e[_0x4d5586(0xd2)]();if(!drawing)return;const _0x4ca2b5=getPos(_0x2e268e);drawStroke(lastX,lastY,_0x4ca2b5['x'],_0x4ca2b5['y']),lastX=_0x4ca2b5['x'],lastY=_0x4ca2b5['y'];}),canvas['addEventListener'](_0x418e65(0xf3),()=>drawing=![]);function drawStroke(_0x3dc3f0,_0x38da15,_0x5b0e2,_0x39c3f6){const _0x45f30b=_0x418e65;ctx[_0x45f30b(0x22b)]=_0x45f30b(0x2b2),ctx['lineWidth']=0x4,ctx[_0x45f30b(0x291)]=_0x45f30b(0x298),ctx[_0x45f30b(0x83)]=_0x45f30b(0x298),ctx[_0x45f30b(0x25a)](),ctx[_0x45f30b(0x17e)](_0x3dc3f0,_0x38da15),ctx[_0x45f30b(0x2b9)](_0x5b0e2,_0x39c3f6),ctx['stroke']();}function clearCanvas(){const _0x485d56=_0x418e65;ctx[_0x485d56(0x249)](0x0,0x0,canvas[_0x485d56(0xe9)],canvas[_0x485d56(0x2d6)]),ctx[_0x485d56(0x22b)]='#D4B896',ctx[_0x485d56(0xca)]=0x1;const _0x19149a=canvas['width']/0x4;for(let _0x55564b=_0x19149a;_0x55564b<canvas[_0x485d56(0xe9)];_0x55564b+=_0x19149a){ctx[_0x485d56(0x25a)](),ctx[_0x485d56(0x17e)](_0x55564b,0x0),ctx[_0x485d56(0x2b9)](_0x55564b,canvas[_0x485d56(0x2d6)]),ctx[_0x485d56(0x18b)]();}for(let _0x3dae7e=_0x19149a;_0x3dae7e<canvas[_0x485d56(0x2d6)];_0x3dae7e+=_0x19149a){ctx['beginPath'](),ctx['moveTo'](0x0,_0x3dae7e),ctx[_0x485d56(0x2b9)](canvas['width'],_0x3dae7e),ctx[_0x485d56(0x18b)]();}ctx[_0x485d56(0x25a)](),ctx['moveTo'](0x0,0x0),ctx[_0x485d56(0x2b9)](canvas[_0x485d56(0xe9)],canvas[_0x485d56(0x2d6)]),ctx[_0x485d56(0x18b)](),ctx[_0x485d56(0x25a)](),ctx[_0x485d56(0x17e)](canvas[_0x485d56(0xe9)],0x0),ctx['lineTo'](0x0,canvas[_0x485d56(0x2d6)]),ctx[_0x485d56(0x18b)]();}function checkWrite(){const _0x1e0536=_0x418e65,_0x3d4f0a=ctx['getImageData'](0x0,0x0,canvas[_0x1e0536(0xe9)],canvas[_0x1e0536(0x2d6)])[_0x1e0536(0x160)];if(!Array['from'](_0x3d4f0a)[_0x1e0536(0x16d)]((_0x1ba77b,_0x3dfc0b)=>_0x3dfc0b%0x4===0x3&&_0x1ba77b>0xa)){showToast(_0x1e0536(0x139),'');return;}showToast('✅\x20Nhấn\x20\x22Xem\x20đáp\x20án\x22\x20để\x20so\x20sánh.',_0x1e0536(0x243));}function showWriteAnswer(){const _0x546f1b=_0x418e65,_0x15dc16=getCards()[curIdx%getCards()[_0x546f1b(0x13c)]];ctx[_0x546f1b(0x219)]=_0x546f1b(0x2c0),ctx[_0x546f1b(0x321)]=_0x546f1b(0x96),ctx['textAlign']='center',ctx[_0x546f1b(0x2b3)]=_0x546f1b(0x144),ctx[_0x546f1b(0xbf)](_0x15dc16[_0x546f1b(0x109)],canvas[_0x546f1b(0xe9)]/0x2,canvas[_0x546f1b(0x2d6)]/0x2),showToast('📖\x20Đáp\x20án:\x20'+_0x15dc16[_0x546f1b(0x109)]+'\x20('+_0x15dc16[_0x546f1b(0x9b)]+')','');}function renderListenOptions(_0x15f6d9){const _0x29bc76=_0x418e65,_0xf93790=getCards();let _0x27b5ba=[_0x15f6d9];const _0x170fc1=_0xf93790[_0x29bc76(0x258)](_0x22bf7c=>_0x22bf7c[_0x29bc76(0x109)]!==_0x15f6d9[_0x29bc76(0x109)]);while(_0x27b5ba[_0x29bc76(0x13c)]<0x4&&_0x170fc1['length']>0x0){const _0x517d47=_0x170fc1[_0x29bc76(0xcc)](Math[_0x29bc76(0x129)](Math['random']()*_0x170fc1[_0x29bc76(0x13c)]),0x1)[0x0];_0x27b5ba['push'](_0x517d47);}_0x27b5ba=_0x27b5ba[_0x29bc76(0x218)](()=>Math[_0x29bc76(0xd0)]()-0.5);const _0x4ab325=document[_0x29bc76(0x1c2)](_0x29bc76(0x2c1));_0x4ab325[_0x29bc76(0x95)]='',_0x27b5ba[_0x29bc76(0x175)](_0x494c26=>{const _0x43f05c=_0x29bc76,_0x4c4021=document[_0x43f05c(0xfe)]('div');_0x4c4021[_0x43f05c(0x1e8)]=_0x43f05c(0x87),_0x4c4021['innerHTML']=_0x43f05c(0x31c)+_0x494c26['char']+_0x43f05c(0x18e)+_0x494c26[_0x43f05c(0x22e)]+_0x43f05c(0x1db),_0x4c4021[_0x43f05c(0x1ae)]=()=>{const _0x26b3fc=_0x43f05c;document[_0x26b3fc(0xac)](_0x26b3fc(0x2d2))['forEach'](_0x6f42b2=>_0x6f42b2[_0x26b3fc(0x1ae)]=null),_0x4c4021['classList'][_0x26b3fc(0xeb)](_0x494c26['char']===_0x15f6d9['char']?'correct':_0x26b3fc(0xb1)),_0x494c26['char']===_0x15f6d9[_0x26b3fc(0x109)]&&(score++,saveScore()),showToast(_0x494c26[_0x26b3fc(0x109)]===_0x15f6d9[_0x26b3fc(0x109)]?_0x26b3fc(0x1b0):_0x26b3fc(0x12c),_0x494c26[_0x26b3fc(0x109)]===_0x15f6d9['char']?_0x26b3fc(0x243):_0x26b3fc(0x1f1));},_0x4ab325[_0x43f05c(0x310)](_0x4c4021);});}function playAudio(){const _0x58627b=_0x418e65,_0x1d58fd=getCards()[curIdx%getCards()[_0x58627b(0x13c)]];if(_0x58627b(0x328)in window){const _0x12a122=new SpeechSynthesisUtterance(_0x1d58fd['char']);_0x12a122[_0x58627b(0x22a)]=_0x58627b(0x251),_0x12a122[_0x58627b(0x1df)]=0.8,speechSynthesis[_0x58627b(0x2b5)](_0x12a122),showToast(_0x58627b(0x224)+_0x1d58fd[_0x58627b(0x109)],'');}else showToast(_0x58627b(0x97),'');}function setHSKCard(_0x4420b7,_0x7c97c7){const _0x14a0c4=_0x418e65;document['querySelectorAll'](_0x14a0c4(0x2fe))[_0x14a0c4(0x175)](_0x183d16=>_0x183d16[_0x14a0c4(0x10a)]['remove'](_0x14a0c4(0x27a))),_0x7c97c7[_0x14a0c4(0x10a)][_0x14a0c4(0xeb)](_0x14a0c4(0x27a));}function scrollToFlash(){const _0x1e92d0=_0x418e65;document['getElementById'](_0x1e92d0(0x1b9))['scrollIntoView']({'behavior':'smooth'});}function scrollToHSK(){const _0x1cb23d=_0x418e65;document[_0x1cb23d(0x1c2)](_0x1cb23d(0x264))['scrollIntoView']({'behavior':'smooth'});}let toastTimer;function showToast(_0x535369,_0x1920ae=''){const _0x3194ad=_0x418e65,_0x1aebcd=document['getElementById'](_0x3194ad(0x2d1));_0x1aebcd['textContent']=_0x535369,_0x1aebcd[_0x3194ad(0x1e8)]=_0x3194ad(0x2a7)+(_0x1920ae?'\x20'+_0x1920ae:''),clearTimeout(toastTimer),toastTimer=setTimeout(()=>_0x1aebcd[_0x3194ad(0x10a)][_0x3194ad(0x2d7)](_0x3194ad(0x8b)),0x9c4);}clearCanvas(),renderCard();function _0x2d27(_0x4dddd1,_0x409885){_0x4dddd1=_0x4dddd1-0x82;const _0x2a95f5=_0x2a95();let _0x2d2785=_0x2a95f5[_0x4dddd1];return _0x2d2785;}const firebaseConfig={'apiKey':_0x418e65(0x1c4),'authDomain':'hoc-tieng-trung-be68a.firebaseapp.com','projectId':_0x418e65(0x20a),'storageBucket':_0x418e65(0x14f),'messagingSenderId':_0x418e65(0xdf),'appId':_0x418e65(0xe5),'measurementId':_0x418e65(0x26f)};import('https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js')[_0x418e65(0x140)](_0x5e2439=>{const _0x1adb04=_0x418e65,_0x2f799e=_0x5e2439['initializeApp'](firebaseConfig);import(_0x1adb04(0x27f))[_0x1adb04(0x140)](_0x20a988=>{const _0x59d097=_0x1adb04;window['db']=_0x20a988[_0x59d097(0x11c)](_0x2f799e),console['log'](_0x59d097(0x231));});});
+</script>
+</body>
+</html>
