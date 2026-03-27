@@ -516,7 +516,7 @@
     </button>
     <!-- Google One Tap container (ẩn, GSI tự xử lý) -->
     <div id="g_id_onload"
-         data-client_id="503530810114-mkv529gedn5hdkhihuj7u5pfqej24i0e.apps.googleusercontent.com"
+         data-client_id="1049498478862-ktdtjbldmqkl1cvla7gd78aue8ee2qu9.apps.googleusercontent.com"
          data-callback="handleGoogleCredential"
          data-auto_prompt="false">
     </div>
@@ -529,7 +529,7 @@
    ⚠️  THAY 2 CHỖ "YOUR_GOOGLE_CLIENT_ID"
    bằng Client ID thật của bạn (xem hướng dẫn ở cuối file)
 ═══════════════════════════════════════ */
-const GOOGLE_CLIENT_ID = '503530810114-mkv529gedn5hdkhihuj7u5pfqej24i0e.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '1049498478862-ktdtjbldmqkl1cvla7gd78aue8ee2qu9.apps.googleusercontent.com';
 
 /* ── AUTH STATE ─────────────────────── */
 let currentUser = null;
@@ -857,6 +857,24 @@ function scrollToHSK(){document.getElementById('hsk-section').scrollIntoView({be
 let toastTimer;
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);}
 clearCanvas();renderCard();
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDut6XEJP30TyQevU6F5YbSvYs61uf0O9E",
+  authDomain: "hoc-tieng-trung-be68a.firebaseapp.com",
+  projectId: "hoc-tieng-trung-be68a",
+  storageBucket: "hoc-tieng-trung-be68a.firebasestorage.app",
+  messagingSenderId: "803684496324",
+  appId: "1:803684496324:web:bc68c035b5046943b9aa91",
+  measurementId: "G-7NCSDZYNYP"
+};
+// Lệnh khởi chạy Firebase và Database
+import("https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js").then((firebaseApp) => {
+  const app = firebaseApp.initializeApp(firebaseConfig);
+  import("https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js").then((firestore) => {
+    window.db = firestore.getFirestore(app);
+    console.log("🔥 Firebase đã kết nối thành công!");
+  });
+});
 </script>
 
 <!--
